@@ -1,0 +1,8 @@
+app,suite,total_tests,defects_detected,total_defects,detection_rate_per_total_tests,only_invalid_defects,only_valid_defects,both_defects,missed_defects
+BasicPackage,PICT_plain,20,8,10,0.4000,"","D3;D4;D5;D6;D7;D8;D9;D10","","D1;D2"
+BasicPayroll,PICT_plain,16,8,10,0.5000,"","D2;D3;D5;D6;D7;D8;D9;D10","","D1;D4"
+EnhancedPackage,PICT_plain,35,13,20,0.3714,"D9","D1;D3;D5;D6;D7;D8;D10;D13;D15;D16;D17;D20","","D2;D4;D11;D12;D14;D18;D19"
+EnhancedPackage,PICT_constrained,35,14,20,0.4000,"","D1;D2;D3;D5;D6;D7;D8;D10;D13;D15;D16;D17;D19;D20","","D4;D9;D11;D12;D14;D18"
+EnhancedPayroll,PICT_plain,27,16,20,0.5926,"D9;D12;D15","D1;D2;D3;D4;D6;D7;D10;D13;D14;D16;D18;D19;D20","","D5;D8;D11;D17"
+EnhancedPayroll,PICT_constrained,32,13,20,0.4063,"","D1;D2;D3;D4;D6;D7;D10;D13;D14;D16;D18;D19;D20","","D5;D8;D9;D11;D12;D15;D17"
+

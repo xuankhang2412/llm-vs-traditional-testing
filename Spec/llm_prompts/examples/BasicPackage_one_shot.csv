@@ -1,0 +1,2 @@
+weight,origin,destination,deliveryOption,signatureOption,deliveryLocationType,saturdayDelivery,holdAtLocation,fragile,dangerous,expected
+20.0,2,3,4,1,0,0,0,0,0,58.00

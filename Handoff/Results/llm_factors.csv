@@ -1,0 +1,12 @@
+scope,factor,level,suite_count,pooled_defects_detected,pooled_defect_opportunities,pooled_detection_rate,mean_of_per_suite_rates,mean_defects_per_test,label
+All_Apps,Condition,C1,4,55,60,0.9167,0.9375,0.5000,descriptive
+All_Apps,Condition,C2,4,55,60,0.9167,0.9375,0.5000,descriptive
+All_Apps,Condition,C3,4,55,60,0.9167,0.9375,0.5000,descriptive
+All_Apps,Condition,C4,4,54,60,0.9000,0.9250,0.4929,descriptive
+All_Apps,Condition,C5,4,54,60,0.9000,0.9250,0.4929,descriptive
+All_Apps,Condition,C6,4,53,60,0.8833,0.9125,0.4857,descriptive
+All_Apps,Detail_Level,"Low (C1-C3)",12,165,180,0.9167,0.9375,0.5000,descriptive
+All_Apps,Detail_Level,"High (C4-C6)",12,161,180,0.8944,0.9208,0.4905,descriptive
+All_Apps,Shots,"0-shot (C1,C4)",8,109,120,0.9083,0.9313,0.4964,descriptive
+All_Apps,Shots,"1-shot (C2,C5)",8,109,120,0.9083,0.9313,0.4964,descriptive
+All_Apps,Shots,"3-shot (C3,C6)",8,108,120,0.9000,0.9250,0.4929,descriptive

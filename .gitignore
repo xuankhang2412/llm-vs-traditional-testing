@@ -1,0 +1,14 @@
+# Maven build targets and compiled classes
+**/target/
+**/*.class
+Audit/classes/
+Audit/tmp/
+
+# IDE configurations
+.vscode/
+.idea/
+*.iml
+
+# OS temporary files
+.DS_Store
+Thumbs.db

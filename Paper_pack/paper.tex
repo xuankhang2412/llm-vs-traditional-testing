@@ -1,0 +1,452 @@
+%%
+%% This is file `sample-acmsmall-conf.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% samples.dtx  (with options: `acmsmall-conf')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from sample-acmsmall-conf.tex.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file samples.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%%
+%%
+%% Commands for TeXCount
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+%%
+%%
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For submission and review of your manuscript please change the
+%% command to \documentclass[manuscript, screen, review]{acmart}.
+%%
+%% When submitting camera ready or to TAPS, please change the command
+%% to \documentclass[sigconf]{acmart} or whichever template is required
+%% for your publication.
+%%
+%%
+\RequirePackage[bookmarksnumbered,unicode]{hyperref}
+\documentclass[acmsmall]{acmart}
+
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{acmcopyright}
+\copyrightyear{2027}
+\acmYear{2027}
+\acmDOI{XXXXXXX.XXXXXXX}
+
+%% These commands are for a PROCEEDINGS abstract or paper.
+\acmConference[ICIIT 2027]{2027 12th International Conference on Intelligent Information Technology}{March 04--07, 2027}{Ho Chi Minh City, Vietnam}
+%%
+%%  Uncomment \acmBooktitle if the title of the proceedings is different
+%%  from ``Proceedings of ...''!
+%%
+%%\acmBooktitle{Proceedings of the 2027 12th International Conference on Intelligent Information Technology (ICIIT 2027), March 04--07, 2027, Ho Chi Minh City, Vietnam}
+\acmPrice{15.00}
+\acmISBN{978-1-4503-XXXX-X/27/03}
+
+
+%%
+%% Submission ID.
+%% Use this when submitting an article to a sponsored event. You'll
+%% receive a unique submission ID from the organizers
+%% of the event, and this ID should be used as the parameter to this command.
+%%\acmSubmissionID{123-A56-BU3}
+
+%%
+%% For managing citations, it is recommended to use bibliography
+%% files in BibTeX format.
+%%
+%% You can then either use BibTeX with the ACM-Reference-Format style,
+%% or BibLaTeX with the acmnumeric or acmauthoryear sytles, that include
+%% support for advanced citation of software artefact from the
+%% biblatex-software package, also separately available on CTAN.
+%%
+%% Look at the sample-*-biblatex.tex files for templates showcasing
+%% the biblatex styles.
+%%
+
+%%
+%% The majority of ACM publications use numbered citations and
+%% references.  The command \citestyle{authoryear} switches to the
+%% "author year" style.
+%%
+%% If you are preparing content for an event
+%% sponsored by ACM SIGGRAPH, you must use the "author year" style of
+%% citations and references.
+%% Uncommenting
+%% the next command will enable that style.
+%%\citestyle{acmauthoryear}
+
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+\title[Benchmarking LLM Test Case Generation]{Replicating and Extending a Benchmark of Large Language Model Test Case Generation Against Human and Pairwise Methods}
+
+%% Authors from FPT University, Ho Chi Minh City, Vietnam:
+%% Ngô Xuân Khang – SE192657 (xuankhang2412@gmail.com)
+%% Huỳnh Hữu Phước – SE171284 (huynhhuuphuocpro9@gmail.com)
+%% Vũ Duy – SE193241 (vduyv1011@gmail.com)
+%% Nguyễn Tấn Huy – SE172580 (tanhuyn402@gmail.com)
+\author{Xuan Khang Ngo}
+\author{Huu Phuoc Huynh}
+\author{Duy Vu}
+\author{Tan Huy Nguyen}
+\affiliation{%
+  \institution{FPT University}
+  \city{Ho Chi Minh City}
+  \country{Vietnam}
+}
+\email{xuankhang2412@gmail.com, huynhhuuphuocpro9@gmail.com, vduyv1011@gmail.com, tanhuyn402@gmail.com}
+
+\renewcommand{\shortauthors}{X. K. Ngo et al.}
+
+\begin{abstract}
+% Source: 01_source_paper.pdf; 02_summary.md Sections 1, 2, 5, 6, 8, 9; 08_statistical_tests_extended.csv
+Large language models (LLMs) are increasingly used to generate black-box functional test suites from natural-language specifications. We present a differentiated replication and extension of a recent benchmark by Gillenson, Mulgund, and Arora (2026) that compared LLM-generated test cases with human test-first development (TFD) and pairwise testing (Microsoft PICT) across package shipping and payroll applications. Because the original study published neither source code nor formal defect implementations, we reconstructed four deterministic Java testbeds (Basic and Enhanced variants of Package and Payroll) with reconciled specifications and 60 seeded defects across boundary, arithmetic, logic, and conditional categories. We evaluated 34 test suites (935 test cases; 15,540 test-defect evaluations) comprising human TFD, unconstrained and constrained PICT, and Gemini 3.1 Pro under six factorial prompt conditions varying specification detail and few-shot exemplars. Across all 60 defects, human TFD detected 100.0\% (60/60), single LLM suites detected 88.3\%--91.7\% (53--55/60), and unconstrained PICT detected 75.0\% (45/60). Under a 12-comparison Holm-Bonferroni correction across all six conditions without post hoc selection, no single LLM condition differed significantly from TFD or PICT, whereas exploratory post hoc tests showed the best LLM condition (91.7\%) and six-condition LLM union (98.3\%) outperforming PICT. Combining the LLM union with unconstrained PICT matched TFD's 100.0\% (60/60) detection, but required 237--245 generated test rows per Enhanced application (112--148 distinct inputs) versus 35 for TFD, and 19.7 minutes of total LLM response time over all 24 runs (excluding specification and prompt preparation) versus 280.0 self-reported human minutes for TFD across the four applications.
+\end{abstract}
+
+%% Candidate ACM CCS concepts - [AUTHORS TO VERIFY WITH THE ACM CCS TOOL]
+\begin{CCSXML}
+<ccs2012>
+ <concept>
+  <concept_id>10011007.10011074.10011099.10011102.10011103</concept_id>
+  <concept_desc>Software and its engineering~Software testing and debugging</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10010147.10010178.10010179</concept_id>
+  <concept_desc>Computing methodologies~Natural language processing</concept_desc>
+  <concept_significance>300</concept_significance>
+ </concept>
+</ccs2012>
+\end{CCSXML}
+
+% [AUTHORS TO VERIFY WITH THE ACM CCS TOOL]
+\ccsdesc[500]{Software and its engineering~Software testing and debugging}
+\ccsdesc[300]{Computing methodologies~Natural language processing}
+
+\keywords{Software testing, black-box test generation, large language models, pairwise combinatorial testing, test-first development, empirical replication}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+% Source: 01_source_paper.pdf; 02_summary.md Sections 1-9; 03_defect_detection_matrix.csv; 07_known_issues.md; 08_statistical_tests_extended.csv
+
+Software testing is a critical quality assurance activity in information systems development, verifying that software artifacts satisfy functional and non-functional requirements before deployment~\cite{Burnstein2003, Myers2004, Bertolino2007}. Persistent software failures traced to inadequate or incomplete testing~\cite{EwusiMensah2003} have long motivated efforts to balance fault-revelation effectiveness against manual authoring effort, as noted in Gillenson, Mulgund, and Arora~\cite{Gillenson2026}. In system-level black-box functional testing---where testers derive input vectors and expected outputs solely from external specifications without inspecting internal code paths---two traditional approaches are widely practiced: manual test-first development (TFD)~\cite{Beck2003} and automated pairwise combinatorial testing~\cite{Cohen1997, Kuhn2004, Czerwonka2008}. While manual test design leverages tester knowledge to target subtle boundary conditions and multi-rule interactions~\cite{Itkonen2013}, it can be labor-intensive~\cite{Gillenson2026}; conversely, pairwise tools such as Microsoft PICT efficiently cover all two-way parameter interactions~\cite{Nie2011} but may miss higher-order logic or exact threshold faults.
+
+Recent advances in generative artificial intelligence (GenAI), particularly large language models (LLMs) pretrained on vast corpora of natural language and source code~\cite{Brown2020, OpenAI2023}, offer a promising third path. Because functional specifications and test cases follow structured, deterministic input-output rules, LLMs have been applied to automated test generation and improvement~\cite{Alshahwan2024, Ouedraogo2024, Yang2024}. However, as Gillenson et al.~\cite{Gillenson2026} observed, direct empirical benchmarks comparing LLM-generated black-box test suites against both human TFD and pairwise combinatorial tools under controlled defect-seeding conditions had previously remained unexplored.
+
+To address that gap, Gillenson et al.~\cite{Gillenson2026} conducted a two-phase design science study~\cite{Hevner2004, Peffers2007} benchmarking ChatGPT-4/4o against human TFD and Microsoft PICT across Basic and Enhanced versions of a package shipping application and a payroll calculator, each seeded with 10 defects. While their study established an important comparative baseline, two methodological aspects motivate independent replication and extension. First, the primary effectiveness metric reported in their main comparison tables was the sum of failing test cases across defects (``aggregate hits''), which sums how many tests in a suite fail on each defect rather than measuring binary defect detection (whether at least one test exposes a defect); evaluating binary detection alongside failing-test counts gives a different reading in several experimental cells. Second, because the original paper published neither source code nor formal defect implementations, independent evaluation requires reconstructing an executable benchmark. Furthermore, whereas the TFD suites in Gillenson et al.~\cite{Gillenson2026} were written by the specification authors themselves, our replication assigns specification-based manual test creation to an independent external tester who had no access to the code or seeded defects, while retaining the label ``TFD'' for direct comparability with the source study.
+
+In this paper, we report a differentiated replication and extension of Gillenson et al.~\cite{Gillenson2026}. We replicate their two-domain, two-complexity experimental structure (Basic and Enhanced Package Shipping and Payroll) and three-method comparison (TFD, PICT, and LLM across varying prompt specificity levels) under a one-defect-at-a-time execution protocol. We extend their design in six ways: (1)~we build four deterministic Java testbeds (to be released in the supplementary repository [SUPPLEMENTARY URL - TO BE PROVIDED]) from reconciled specifications (v1.1.1); (2)~we expand the Enhanced fault catalogues to 20 defects per application (totaling $N=60$ seeded defects across 34 test suites, 935 test cases, and 15,540 test-defect evaluations); (3)~we evaluate defect-level binary detection rates alongside failing-test counts, invalid-test rates, and expected-value oracle accuracy; (4)~we classify all 60 defects into boundary, arithmetic, logic, and conditional types and compare unconstrained versus constrained PICT; (5)~we quantify multi-method hybrid unions and input-space overlap; and (6)~we record generation time to evaluate cost-effectiveness.
+
+We investigate four research questions and two hypotheses derived from the source study:
+\begin{itemize}
+  \item \textbf{RQ1:} How do LLM-generated test suites compare with human TFD and pairwise PICT in defect detection effectiveness, oracle accuracy, and generation cost? We test \textbf{H1} ($\text{LLM} \ge \text{PICT}$ in defect detection) and \textbf{H2} ($\text{TFD} > \text{LLM}$ in the niche Package shipping domain).
+  \item \textbf{RQ2:} What is the descriptive effect of prompt specification detail (low vs.\ high) and number of few-shot examples (0, 1, vs.\ 3) on LLM test suite effectiveness?
+  \item \textbf{RQ3:} Does combining test suites across methods (hybrid PICT + LLM or multi-prompt LLM unions) detect more defects than any single automated method?
+  \item \textbf{RQ4:} How do defect category (boundary, arithmetic, logic, conditional) and application domain moderate defect detection across methods?
+\end{itemize}
+
+\section{Related Work}
+\label{sec:related}
+% Source: Strictly from 01_source_paper.pdf reference list (24 total keys across the whole paper)
+
+\subsection{Specification-Based, Test-First, and Combinatorial Testing}
+Classical functional testing evaluates software behavior against external requirement specifications without relying on internal code structure~\cite{Burnstein2003, Myers2004, Bertolino2007}. Test-first development (TFD) positions test creation before implementation so that requirement boundaries, equivalence partitions, and negative error conditions are specified upfront~\cite{Beck2003}. Empirical investigations of manual testing demonstrate that human testers rely heavily on domain knowledge and systematic heuristics to design fault-revealing inputs and edge cases~\cite{Itkonen2013}, although manual test design and maintenance remain resource-intensive, as noted in Gillenson et al.~\cite{Gillenson2026}.
+
+To reduce test suite size while maintaining systematic coverage of parameter interactions, combinatorial testing techniques construct minimal test sets covering all $t$-way combinations of input parameter values~\cite{Cohen1997, Nie2011}. Empirical studies of software fault interactions indicate that a large fraction of functional failures are triggered by single-parameter values or pairwise (two-way) interactions~\cite{Kuhn2004}. Tools such as Microsoft PICT~\cite{Czerwonka2008} automate pairwise test generation and allow practitioners to specify domain constraints that exclude invalid input combinations. Nevertheless, as summarized in Gillenson et al.~\cite{Gillenson2026}, pairwise generation depends on how continuous variables are partitioned into representative values and may miss faults governed by higher-order predicates or exact boundary ties.
+
+\subsection{AI-Driven Test Generation and Prompt Engineering}
+Early applications of artificial intelligence to software test generation centered on search-based software engineering (SBSE), using metaheuristics such as genetic algorithms and simulated annealing to generate test data and maximize fault revelation~\cite{Harman2001, McMinn2004}. As summarized in Gillenson et al.~\cite{Gillenson2026}, SBSE techniques rely on static heuristics and rigid representations of the system under test, which can limit their direct applicability when testers only have access to external natural-language specifications.
+
+More recently, generative pre-trained transformers~\cite{Brown2020, OpenAI2023} have been applied to automated software test generation, test improvement, and test-driven development~\cite{Alshahwan2024, Cassieri2024, Ouedraogo2024, Yang2024, Baqar2025}. Because LLM outputs depend strongly on input formulation, prompt engineering has emerged as a central design variable~\cite{Geroimenko2025}, with empirical work examining how prompt formatting affects LLM performance~\cite{He2024}.
+
+Closest to our work, Gillenson et al.~\cite{Gillenson2026} used a design science research methodology~\cite{Hevner2004, Peffers2007} (drawing on evaluation, psychometric measurement, and cognitive load perspectives, as summarized in~\cite{Gillenson2026}) to benchmark ChatGPT-4/4o against author-written TFD and PICT across Basic and Enhanced Package and Payroll applications. They reported that LLMs matched or exceeded PICT in enhanced applications, achieved higher hit counts in the familiar payroll domain than in niche package shipping, and exhibited ``prompt overfitting'' when prompts were overloaded with detail. Our study replicates and extends their benchmark using an independent human tester, a different model family (Gemini 3.1 Pro), an expanded 60-defect Java benchmark, and paired defect-level statistical testing.
+
+\section{Methodology}
+\label{sec:method}
+% Source: 01_source_paper.pdf; 02_summary.md Sections 1-9, 12; 03_defect_detection_matrix.csv; 04_defect_catalogue.md; testbed_specs.md; 06_prompts_and_logs.md; 07_known_issues.md; 08_statistical_tests_extended.csv; pict_facts.md
+
+Following the two-phase design of Gillenson et al.~\cite{Gillenson2026}, we evaluate specification-based black-box test suites across two domains (Package Shipping and Payroll) and two complexity levels (Basic and Enhanced). Because the source study published no source code and only brief defect descriptions, we built four deterministic Java testbeds from reconciled specifications (v1.1.1) and implemented 60 seeded defects. Full specifications, source code, prompt templates, and raw logs are provided in the supplementary repository [SUPPLEMENTARY URL - TO BE PROVIDED].
+
+\subsection{Testbed Applications and Seeded Defects}
+\label{sec:testbeds}
+% Source: testbed_specs.md Sections 1-5; 04_defect_catalogue.md Sections 1-4; 03_defect_detection_matrix.csv
+
+\begin{table}[t]
+  \caption{Summary of reconstructed Java testbeds and seeded defect categories ($N=60$)}
+  \label{tab:testbeds}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{0.92}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{@{}l c p{4.6cm} ccccc@{}}
+    \toprule
+    \textbf{Application} & \textbf{Inputs} & \textbf{Main rule types} & \multicolumn{5}{c}{\textbf{Seeded defects by type}} \\
+    \cmidrule(lr){4-8}
+    & & & \textbf{Bnd} & \textbf{Arith} & \textbf{Log} & \textbf{Cond} & \textbf{Total} \\
+    \midrule
+    Basic Package & 10 & $4\times 4$ zone rates; 7 speed tiers; 6 fees; $0 < w \le 60$~lbs & 2 & 3 & 5 & 0 & 10 \\
+    Basic Payroll & 12 & OT $1.5\times$, holiday $2\times$; 3 federal tiers; FICA; 3 health plans; pension cap & 2 & 2 & 6 & 0 & 10 \\
+    Enhanced Package & 11 & Adds 8 packaging tiers and rules N1--N10 & 4 & 5 & 3 & 8 & 20 \\
+    Enhanced Payroll & 13 & Adds 3 state tax schedules and rules N1--N10 & 5 & 5 & 4 & 6 & 20 \\
+    \midrule
+    \textbf{Total} & -- & -- & \textbf{13} & \textbf{15} & \textbf{18} & \textbf{14} & \textbf{60} \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+Table~\ref{tab:testbeds} summarizes the four Java testbeds. All monetary calculations use \texttt{BigDecimal} with full intermediate precision; only final outputs (shipping cost, gross pay, and net pay) are rounded to two decimal places using \texttt{RoundingMode.HALF\_UP} (ties at the third decimal round away from zero). Inputs violating any domain bound or validation rule throw an \texttt{IllegalArgumentException}, represented in test suites by \texttt{ERROR}. Each specification includes one worked calculation example in its rounding clarification section, which some suites reused (Section~\ref{sec:limitations}).
+
+In \texttt{BasicPackage}, shipping cost is computed sequentially as $\text{baseRate}(\text{origin}, \text{destination}) \times \text{weight}$, scaled by the delivery multiplier (codes 1--7), plus applicable surcharges (signature codes 0--2, business/residence, and binary flags for Saturday, hold, fragile, and dangerous). \texttt{EnhancedPackage} adds packaging codes 1--8 (enforcing capacity limits of 2, 10, 25, 40, 10, and 60~lbs; additive fees for codes 1--6 or $\times 1.15/\times 1.30$ scaling for codes 7--8 before surcharges) and 10 business rules (N1--N10), including a final 10\% discount ($\times 0.90$) for within-zone shipments ($\text{origin}=\text{destination}$) with Same Day, First Overnight, or Priority Overnight delivery (N1), a $2.75\times$ fragile Same-Day multiplier (N2), hold-fee waiver on Express Saver (N3), signature requirements for business (N4) and parcels $>50$~lbs (N5), fragile direct-signature (+\$30, N6) and unsigned dangerous (+\$40, N10) surcharges, fragile-dangerous incompatibility (N7), dangerous speed limits (options 1--4, N8), and a reduced +\$10 zone-4 residential Saturday fee (N9).
+
+In \texttt{BasicPayroll}, weekly gross pay sums regular ($1\times$), overtime ($1.5\times$), and holiday ($2\times$) earnings for hourly wages in \$15.00--\$50.00; federal withholding (10\%, 22\%, or 35\% by hourly wage tier), Social Security (6.20\%), Medicare (1.45\%), and benefit deductions (medical 0--3, dental 0--2, vision 0--2, LTD, STD, parking, United Way, and pension capped at 10\% of gross pay) are subtracted without zero-clamping (negative net pay is valid). \texttt{EnhancedPayroll} adds state tax schedules ($1=\text{TN}$, $2=\text{AR}$, $3=\text{MS}$) and 10 rules (N1--N10): low-wage overtime cap ($\le 10$~hrs at wage $\le \$20.00$, N1), taxable bonuses (+\$50 for OT $>5$~hrs, N2; +\$75 for holiday $>5$~hrs, N3) included in gross pay before taxes and the pension cap, enrollment dependencies (medical requires dental, N4; wage $\ge \$40.01$ requires medical 2 or 3, N5; LTD requires STD, N9), free health plans at wage $\le \$20.00$ (N6), and direct net-pay credits (+\$15 wellness, N7; +15\% United Way when $\ge \$10$, N8; +\$5 dual disability, N10).
+
+Following Gillenson et al.~\cite{Gillenson2026}, we seeded 10 defects each into the Basic applications and expanded the Enhanced applications to 20 defects each ($N=60$ total; Table~\ref{tab:testbeds}), where D1--D10 adapt the source paper's defect descriptions (the concrete defect implementations are our own interpretation of the short source descriptions) and D11--D20 probe additional rules and boundaries. Each defect is a single-point mutation of a specification threshold, operator, rate, or rule condition, categorized as \textbf{Boundary} (13), \textbf{Arithmetic} (15), \textbf{Logic} (18), or \textbf{Conditional} (14).
+
+\subsection{Test Case Generation Methods}
+\label{sec:generation}
+% Source: 02_summary.md Sections 1, 6, 7, 9, 12; 06_prompts_and_logs.md Sections 1-4; 07_known_issues.md Sections 1, 2, 4, 5, 6; pict_facts.md Sections 1-5
+
+All 34 test suites were generated strictly from the specifications without access to source code or seeded defects, targeting 20 tests per suite for Basic applications and 35 for Enhanced applications~\cite{Gillenson2026}.
+
+\paragraph{Human Specification-Based Testing (TFD; 4 suites, 110 tests).}
+Unlike Gillenson et al.~\cite{Gillenson2026}, where the specification authors wrote the TFD suites, our four TFD suites (20 Basic, 35 Enhanced) were designed by one independent external tester given only the v1.1.1 specifications and CSV templates. The tester applied equivalence partitioning, boundary-value analysis, rounding-tie checks, and single-violation negative testing. The tester stated that no AI tool was used; both this statement and the authoring times (45, 55, 85, and 95 minutes across the four applications; 280.0 minutes total) are self-reported and unverified.
+
+\paragraph{Combinatorial Pairwise Testing (PICT; 6 suites, 165 tests).}
+We used Microsoft PICT~\cite{Czerwonka2008} to generate two-way combinatorial suites. Discrete parameters used their full valid domains, while continuous parameters were discretized into representative values---primarily range midpoints chosen by us (e.g., weight 30.0~lbs in \texttt{BasicPackage}; tier midpoints 1.0, 6.0, 17.5, 32.5, 45.0, and 55.0~lbs in \texttt{EnhancedPackage}; tax-bracket midpoints in Payroll) alongside strategic threshold representatives for hours, United Way, and pension in Payroll, which makes exact-boundary defects hard for PICT to hit. We evaluated \texttt{PICT\_plain} across all four applications (unconstrained, producing 25/35 invalid rows in \texttt{EnhancedPackage}---14 from packaging weight limits, 6 from N4, and 5 from N7---and 11/27 in \texttt{EnhancedPayroll} from N4, N9, N5, and N1) and \texttt{PICT\_constrained} on the two Enhanced applications (encoding packaging weight limits and rules N4, N5, N7, and N8 in \texttt{EnhancedPackage}, and rules N1, N4, N5, and N9 in \texttt{EnhancedPayroll}, yielding 0\% invalid rows). Suites exceeding quota were pseudo-randomly downsampled using seed~42 (\texttt{BasicPackage}: $32 \to 20$; \texttt{EnhancedPackage} plain: $61 \to 35$; constrained: $63 \to 35$), whereas suites that saturated pairwise coverage below quota were retained unpadded (\texttt{BasicPayroll} plain: 16; \texttt{EnhancedPayroll} plain: 27; constrained: 32). PICT run time was not measured separately.
+
+\paragraph{Large Language Model Generation (LLM; 24 suites, 660 tests).}
+We generated 24 suites on 4 November 2026 (approximate log timestamps) using Gemini 3.1 Pro (\texttt{High} setting, via the Gemini web app; model label taken from our generation log). Each run used a fresh conversation in a $2 \times 3$ factorial design crossing \textbf{Specification Detail} (Low Detail $C_1$--$C_3$: specification plus a brief instruction to output $N$ test cases as CSV data; High Detail $C_4$--$C_6$: specification plus explicit requirements for the exact CSV header, numeric encodings and units, step-by-step hand calculation following the order of operations, literal \texttt{ERROR} outputs on rule violations, and two-decimal half-up rounding) with \textbf{Few-Shot Exemplars} (0-shot $C_1, C_4$; 1-shot $C_2, C_5$; 3-shot $C_3, C_6$). All 24 suites met exact quotas in 19.69 minutes of cumulative response time (ranging from 0.43 minutes for \texttt{BasicPackage} $C_5$ to 1.50 minutes for \texttt{EnhancedPayroll} $C_3$, excluding specification/prompt preparation and normalization). Three $C_1$ suites included extra \texttt{test\_id} or intermediate \texttt{grossPay} columns and non-standard header names; these were stripped to match the standard CSV schema with SHA-256 verification confirming no input or expected value was altered.
+
+\subsection{Test Oracle, Evaluation Metrics, and Statistical Protocol}
+\label{sec:oracle}
+% Source: 02_summary.md Sections 2, 3, 5, 7, 8, 9, 12; 07_known_issues.md Section 6; 08_statistical_tests_extended.csv
+
+\paragraph{Execution Protocol and Oracles.}
+On 5 November 2026, all 34 suites were executed against the defect-free reference implementation (\texttt{NONE}) and each single-defect mutant ($D_k$, injected one at a time), totaling 15,540 test-defect evaluations. Our primary oracle is behavioral discordance against the reference implementation (\texttt{HIT\_REF}): test $x_i$ detects $D_k$ if and only if $\text{Output}(D_k, x_i) \neq \text{Output}(\text{NONE}, x_i)$, which applies uniformly to all methods including unlabelled PICT suites. For TFD and LLM suites, we also measure expected-value accuracy ($\text{Expected}(x_i) == \text{Output}(\text{NONE}, x_i)$, denoted \texttt{BASELINE\_OK=1}) and a sensitivity oracle (\texttt{HIT\_EXP}) restricted to \texttt{BASELINE\_OK=1} rows.
+
+\paragraph{Metrics, Non-Independence, and Post Hoc Aggregations.}
+Our primary effectiveness metric is the binary \textbf{Defect Detection Rate (DDR)} (detected defects / total defects), alongside test efficiency ($\texttt{defects\_per\_test}$). Secondary metrics are the sum of failing tests across defects, invalid-test rate, expected-value accuracy (on valid and \texttt{ERROR} rows), input Jaccard overlap $|A \cap B| / |A \cup B|$, and generation time. An input-set audit showed that several prompt conditions produced 100\% identical suites: $C_2$--$C_6$ in \texttt{BasicPackage} (leaving 2 distinct suites), $C_1, C_2, C_4$ in \texttt{EnhancedPackage} (4 distinct suites), and $C_4, C_5$ in \texttt{EnhancedPayroll} (5 distinct suites), while all 6 were distinct in \texttt{BasicPayroll}. Thus, the 24 LLM runs yield \textbf{17 distinct suites}, not 24 independent samples. Moreover, \texttt{Best\_LLM} ($C_1$, tied with $C_2$ and $C_3$ at 55/60) and \texttt{LLM\_Union} (pooling all 6 runs: 660 total rows and 294 distinct input vectors across the 4 apps: 23, 73, 77, and 121) are selected or constructed post hoc and use far more tests than TFD (110 tests).
+
+\paragraph{Statistical Protocol.}
+On the paired binary detection vectors across $N=60$ pooled defects (noting that pooled defects are not fully independent; Section~\ref{sec:limitations}), we run Cochran's $Q$ omnibus test across method triplets and two-sided exact binomial McNemar tests on discordant defect counts ($b, c$) with Holm-Bonferroni correction ($\alpha=0.05$). Our \textbf{primary inferential family} for LLM comparisons is the 12-comparison family (testing all six individual conditions $C_1$--$C_6$ against \texttt{PICT\_plain} and against \texttt{TFD} without post hoc selection, defined after the main results were available). We report the 5-comparison family involving post hoc \texttt{Best\_LLM} and \texttt{LLM\_Union} as \textbf{exploratory}, and we do not interpret differences smaller than 2 defects or claim significance for any comparison that does not survive its own family's Holm-Bonferroni correction.
+
+\section{Results}
+\label{sec:results}
+% Source: 02_summary.md Sections 2-9; 03_defect_detection_matrix.csv; 08_statistical_tests_extended.csv; defect_type_by_suite.csv; pict_facts.md
+
+We present results organized by our four research questions (RQ1--RQ4).
+
+\subsection{RQ1: Effectiveness, Oracles, Diversity, and Generation Cost}
+\label{sec:rq1}
+% Source: 02_summary.md Sections 2, 3, 7, 8, 9; 03_defect_detection_matrix.csv; 08_statistical_tests_extended.csv; pict_facts.md Sections 3-5
+
+\begin{table}[t]
+  \caption{Primary and secondary metrics across applications and methods ($N=60$ defects, 34 suites, 935 tests)}
+  \label{tab:metrics}
+  % Source: 02_summary.md Sections 2, 3, 7, 9 (Tables in Sections 2, 3, 9); 03_defect_detection_matrix.csv; pict_facts.md Sections 3-5
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{0.92}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{@{}ll c cc c cc cc c@{}}
+    \toprule
+    \textbf{Application} & \textbf{Method / Condition} & \textbf{Suites} & \textbf{Tests} & \textbf{Det.\ / Tot.} & \textbf{DDR (\%)} & \textbf{Def./Test} & \textbf{Fail Sum} & \textbf{Invalid (\%)} & \textbf{Jacc.\ TFD} & \textbf{Time (min)} \\
+    \midrule
+    Basic Package & TFD & 1 & 20 & 10 / 10 & 100.0 & 0.500 & 50 & 5 (25.0) & -- & 45.00 \\
+    (10 defects) & \texttt{PICT\_plain} & 1 & 20 & 8 / 10 & 80.0 & 0.400 & 73 & 0 (0.0) & 0.000 & n.m. \\
+    & LLM $C_1$ & 1 & 20 & 10 / 10 & 100.0 & 0.500 & 42 & 9 (45.0) & 0.026 & 0.55 \\
+    & LLM $C_2$--$C_6$ (id.) & 5 & 20 & 10 / 10 & 100.0 & 0.500 & 40 & 9 (45.0) & 0.026 & 0.43--0.59 \\
+    & \texttt{LLM\_Union} ($C_1$--$C_6$) & (6) & 120 (23) & 10 / 10 & 100.0 & 0.083 & 242 & 54 (45.0) & -- & 3.14 \\
+    \midrule
+    Basic Payroll & TFD & 1 & 20 & 10 / 10 & 100.0 & 0.500 & 58 & 6 (30.0) & -- & 55.00 \\
+    (10 defects) & \texttt{PICT\_plain} & 1 & 16 & 8 / 10 & 80.0 & 0.500 & 75 & 0 (0.0) & 0.000 & n.m. \\
+    & LLM $C_1$--$C_6$ (6 dist.) & 6 & 20 & 10 / 10 & 100.0 & 0.500 & 25--50 & 8--10 (40.0--50.0) & 0.000--0.143 & 0.44--0.90 \\
+    & \texttt{LLM\_Union} ($C_1$--$C_6$) & (6) & 120 (73) & 10 / 10 & 100.0 & 0.083 & 239 & 54 (45.0) & -- & 3.78 \\
+    \midrule
+    Enhanced Package & TFD & 1 & 35 & 20 / 20 & 100.0 & 0.571 & 50 & 15 (42.9) & -- & 85.00 \\
+    (20 defects) & \texttt{PICT\_plain} & 1 & 35 & 13 / 20 & 65.0 & 0.371 & 29 & 25 (71.4) & 0.000 & n.m. \\
+    & \texttt{PICT\_constrained} & 1 & 35 & 14 / 20 & 70.0 & 0.400 & 82 & 0 (0.0) & 0.000 & n.m. \\
+    & LLM $C_1, C_2, C_4$ (id.) & 3 & 35 & 18 / 20 & 90.0 & 0.514 & 52 & 15 (42.9) & 0.029 & 0.78--0.86 \\
+    & LLM $C_3, C_5$ & 2 & 35 & 18 / 20 & 90.0 & 0.514 & 56, 50 & 15, 14 (42.9, 40.0) & 0.015, 0.029 & 1.27, 1.06 \\
+    & LLM $C_6$ & 1 & 35 & 17 / 20 & 85.0 & 0.486 & 44 & 15 (42.9) & 0.029 & 0.97 \\
+    & \texttt{LLM\_Union} ($C_1$--$C_6$) & (6) & 210 (77) & 20 / 20 & 100.0 & 0.095 & 306 & 89 (42.4) & -- & 5.75 \\
+    \midrule
+    Enhanced Payroll & TFD & 1 & 35 & 20 / 20 & 100.0 & 0.571 & 95 & 16 (45.7) & -- & 95.00 \\
+    (20 defects) & \texttt{PICT\_plain} & 1 & 27 & 16 / 20 & 80.0 & 0.593 & 95 & 11 (40.7) & 0.000 & n.m. \\
+    & \texttt{PICT\_constrained} & 1 & 32 & 13 / 20 & 65.0 & 0.406 & 158 & 0 (0.0) & 0.000 & n.m. \\
+    & LLM $C_1$--$C_3$ & 3 & 35 & 17 / 20 & 85.0 & 0.486 & 64--65 & 12 (34.3) & 0.000--0.045 & 1.05--1.50 \\
+    & LLM $C_4, C_5$ (id.); $C_6$ & 3 & 35 & 16 / 20 & 80.0 & 0.457 & 67; 65 & 11 (31.4) & 0.015; 0.029 & 0.98--1.11 \\
+    & \texttt{LLM\_Union} ($C_1$--$C_6$) & (6) & 210 (121) & 19 / 20 & 95.0 & 0.090 & 393 & 69 (32.9) & -- & 7.02 \\
+    \midrule
+    \textbf{Pooled} & TFD & 4 & 110 & 60 / 60 & 100.0 & 0.545 & 253 & 42 (38.2) & -- & 280.00 \\
+    ($N=60$ defects) & \texttt{PICT\_plain} & 4 & 98 & 45 / 60 & 75.0 & 0.459 & 272 & 36 (36.7) & 0.000 & n.m. \\
+    & LLM single ($C_1$--$C_6$) & 24 (17 dist.) & 110 / cond. & 53--55 / 60 & 88.3--91.7 & 0.482--0.500 & 174--205 & 43--47 (39.1--42.7) & 0.000--0.143 & 3.36 ($C_1$) \\
+    & \texttt{LLM\_Union} ($C_1$--$C_6$) & (24) & 660 (294) & 59 / 60 & 98.3 & 0.089 & 1180 & 266 (40.3) & -- & 19.69 \\
+    \bottomrule
+    \multicolumn{11}{@{}p{1.22\columnwidth}@{}}{\scriptsize \textit{Notes:} For \texttt{LLM\_Union}, Tests shows total rows (distinct input vectors in parentheses). Pooled LLM single DDR: $C_1$--$C_3=55/60$ (91.7\%), $C_4, C_5=54/60$ (90.0\%), $C_6=53/60$ (88.3\%). Expected-value accuracy (\texttt{BASELINE\_OK=1}) was 100.0\% across all TFD (110/110) and LLM (660/660) rows on both valid and \texttt{ERROR} tests; the sensitivity oracle (\texttt{HIT\_EXP}) yielded detection counts identical to \texttt{HIT\_REF}. Every suite had 100\% unique internal rows. Within-app LLM pairwise Jaccard overlap: Basic Package $C_1$ vs.\ $C_2$--$C_6=0.739$ (17/20 rows), $C_2$--$C_6=1.000$; Basic Payroll $C_1$ vs.\ others $=0.000$, $C_2$--$C_6=0.143$--$0.481$ (5--13/20); Enhanced Package $C_1, C_2, C_4=1.000$, other pairs $=0.111$--$0.556$ (7--25/35); Enhanced Payroll $C_1$ vs.\ others $=0.000$, $C_4$ vs.\ $C_5=1.000$, other pairs $=0.077$--$0.489$ (5--23/35). LLM--TFD overlap: 1, 0--5, 1--2, and 0--3 rows across the four apps; PICT shared 0 rows (Jaccard $=0.000$) with TFD or LLM. Some TFD and LLM suites reused the specification worked example (e.g., Basic Package $w=1.05$, zones $1\to 2$, option $3 \to 3.15$). Time is self-reported human effort for TFD (0.214 defects/min) and LLM web-app response time only ($C_1$: 3.36~min, $83.3\times$ faster than TFD; all 24 runs: 19.69~min, $14.2\times$ faster); n.m.\ = PICT run time was not measured separately.}
+  \end{tabular}}
+\end{table}
+
+\begin{table}[t]
+  \caption{Exact two-sided McNemar tests across $N=60$ pooled defects with Holm-Bonferroni correction}
+  \label{tab:stats}
+  % Source: 02_summary.md Section 8; 08_statistical_tests_extended.csv
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{0.92}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{@{}ll cc cc cc ccc@{}}
+    \toprule
+    \textbf{Family} & \textbf{Comparison (Method A vs.\ Method B)} & \textbf{Det.\ A} & \textbf{Det.\ B} & $b$ \textbf{(A only)} & $c$ \textbf{(B only)} & \textbf{Raw $p$} & \textbf{Holm $p$} & \textbf{Sig.} & \textbf{Risk Diff.} & \textbf{Cohen's $g$} \\
+    \midrule
+    \multicolumn{11}{@{}l}{\textit{Primary 12-comparison family (all 6 single LLM conditions vs.\ \texttt{PICT\_plain} and vs.\ TFD; no post hoc selection)}} \\
+    Primary (3 ties) & LLM $C_1, C_2, C_3$ (each) vs.\ \texttt{PICT\_plain} & 55 & 45 & 11 & 1 & 0.00635 & 0.07617 & No & $+0.1667$ & 0.4167 \\
+    Primary (2 ties) & LLM $C_4, C_5$ (each) vs.\ \texttt{PICT\_plain} & 54 & 45 & 10 & 1 & 0.01172 & 0.10547 & No & $+0.1500$ & 0.4091 \\
+    Primary & LLM $C_6$ vs.\ \texttt{PICT\_plain} & 53 & 45 & 10 & 2 & 0.03857 & 0.18750 & No & $+0.1333$ & 0.3333 \\
+    Primary & TFD vs.\ LLM $C_6$ & 60 & 53 & 7 & 0 & 0.01563 & 0.10938 & No & $+0.1167$ & 0.5000 \\
+    Primary (2 ties) & TFD vs.\ LLM $C_4, C_5$ (each) & 60 & 54 & 6 & 0 & 0.03125 & 0.18750 & No & $+0.1000$ & 0.5000 \\
+    Primary (3 ties) & TFD vs.\ LLM $C_1, C_2, C_3$ (each) & 60 & 55 & 5 & 0 & 0.06250 & 0.18750 & No & $+0.0833$ & 0.5000 \\
+    \midrule
+    \multicolumn{11}{@{}l}{\textit{Exploratory 5-comparison family (includes post hoc \texttt{Best\_LLM} $=C_1$ and 6-run \texttt{LLM\_Union})}} \\
+    Exploratory & TFD vs.\ \texttt{PICT\_plain} & 60 & 45 & 15 & 0 & $6.10\times 10^{-5}$ & $3.05\times 10^{-4}$ & \textbf{Yes} & $+0.2500$ & 0.5000 \\
+    Exploratory & \texttt{LLM\_Union} vs.\ \texttt{PICT\_plain} & 59 & 45 & 15 & 1 & $5.19\times 10^{-4}$ & 0.00208 & \textbf{Yes} & $+0.2333$ & 0.4375 \\
+    Exploratory & \texttt{Best\_LLM} ($C_1$) vs.\ \texttt{PICT\_plain} & 55 & 45 & 11 & 1 & 0.00635 & 0.01904 & \textbf{Yes} & $+0.1667$ & 0.4167 \\
+    Exploratory & TFD vs.\ \texttt{Best\_LLM} ($C_1$) & 60 & 55 & 5 & 0 & 0.06250 & 0.12500 & No & $+0.0833$ & 0.5000 \\
+    Exploratory & TFD vs.\ \texttt{LLM\_Union} & 60 & 59 & 1 & 0 & 1.00000 & 1.00000 & No & $+0.0167$ & 0.5000 \\
+    \bottomrule
+    \multicolumn{11}{@{}p{1.15\columnwidth}@{}}{\scriptsize \textit{Notes:} Omnibus Cochran's $Q$ across $(k=3, df=2)$: $Q=21.875$ ($p=1.78\times 10^{-5}$) for (TFD, \texttt{PICT\_plain}, \texttt{Best\_LLM}); $Q=26.375$ ($p=1.87\times 10^{-6}$) for (TFD, \texttt{PICT\_plain}, \texttt{LLM\_Union}). Non-significance between TFD and LLM reflects small discordant counts ($m=5$--$7$) and must not be interpreted as statistical equivalence.}
+  \end{tabular}}
+\end{table}
+
+Table~\ref{tab:metrics} reports detection, oracle, diversity, and cost metrics across all 34 suites, and Table~\ref{tab:stats} reports paired hypothesis tests across the $N=60$ pooled defects. Across all 60 defects, human TFD detected 100.0\% (60/60), single LLM conditions detected 88.3\%--91.7\% (53--55/60), \texttt{LLM\_Union} detected 98.3\% (59/60, missing only \texttt{EnhancedPayroll} D19), and \texttt{PICT\_plain} detected 75.0\% (45/60). Under the primary 12-comparison family, single LLM conditions exceeded \texttt{PICT\_plain} descriptively (raw $p = 0.00635$--$0.03857$) and trailed TFD by 5--7 defects, but no comparison survived Holm-Bonferroni correction ($p_{\text{Holm}} = 0.07617$--$0.18750$); under the exploratory 5-comparison family, TFD, \texttt{LLM\_Union}, and post hoc \texttt{Best\_LLM} differed significantly from \texttt{PICT\_plain}. Thus, H1 ($\text{LLM} \ge \text{PICT}$) is supported descriptively (and in exploratory post hoc tests) but not under the primary 12-comparison correction. Comparing \texttt{PICT\_plain} and \texttt{PICT\_constrained} on Enhanced applications (13/20 vs.\ 14/20 in Package; 16/20 vs.\ 13/20 in Payroll), \texttt{PICT\_plain} caught validation-removal defects missed by \texttt{PICT\_constrained} (Package D9; Payroll D9, D12, D15), whereas \texttt{PICT\_constrained} caught Package D2 and D19 missed by \texttt{PICT\_plain}; two plausible hypotheses consistent with these data are the exclusion of negative tests by constraints (0\% invalid rows vs.\ 40.7\%--71.4\% in \texttt{PICT\_plain}) and differences from seed-42 downsampling or pairwise generation.
+
+\subsection{RQ2: Prompt Specification Detail and Few-Shot Examples}
+\label{sec:rq2}
+% Source: 02_summary.md Section 6; llm_factors.csv
+
+Panel~C of Table~\ref{tab:breakdown} summarizes the $2 \times 3$ prompt factors across the 24 LLM suites. Low-detail prompts ($C_1$--$C_3$) detected 165/180 pooled defect opportunities (91.7\% pooled; 93.75\% unweighted mean of per-suite rates) versus 161/180 (89.4\% pooled; 92.08\% mean) for high-detail prompts ($C_4$--$C_6$). Across example shots, 0-shot ($C_1, C_4$), 1-shot ($C_2, C_5$), and 3-shot ($C_3, C_6$) prompts detected 109/120 (90.8\%), 109/120 (90.8\%), and 108/120 (90.0\%) pooled defects, respectively. Because each condition had one run and several conditions produced identical suites (17/24 distinct; Table~\ref{tab:metrics}), these differences of 1--4 defects are not interpretable.
+
+\subsection{RQ3: Multi-Prompt Unions and Hybrid Combinations}
+\label{sec:rq3}
+% Source: 02_summary.md Sections 1, 5, 7; 03_defect_detection_matrix.csv; hybrid_analysis.csv
+
+On both Basic applications, every single LLM condition and TFD already achieved 10/10 (100.0\%), so hybrid combinations added zero defects. On \texttt{EnhancedPackage}, \texttt{Best\_LLM} + \texttt{PICT\_plain} (70 rows) remained at 18/20 (90.0\%) because \texttt{PICT\_plain} also missed boundary defects D12 and D14, whereas \texttt{LLM\_Union} alone reached 20/20 (100.0\%, 210 rows, 77 distinct inputs; 112 distinct inputs when combined with \texttt{PICT\_plain}'s 35 rows) because condition $C_5$ caught D12 and D14; \texttt{PICT\_plain} contributed $+0$ defects. A positive hybrid gain occurred only on \texttt{EnhancedPayroll}, where only \texttt{PICT\_plain} detected conditional defect D19: combining \texttt{Best\_LLM} + \texttt{PICT\_plain} (62 rows) increased detection by $+1$ defect from 17/20 to 18/20 (90.0\%), and \texttt{LLM\_Union} + \texttt{PICT\_plain} (237 rows, 148 distinct inputs) increased detection by $+1$ defect from 19/20 to 20/20 (100.0\%), matching TFD's 35-test suite.
+
+\subsection{RQ4: Defect Categories and Application Domains}
+\label{sec:rq4}
+% Source: 02_summary.md Section 4; 03_defect_detection_matrix.csv; defect_type_by_suite.csv; pict_facts.md Section 1
+
+\begin{table}[t]
+  \caption{Defect detection by defect category (Panel A), application domain (Panel B), and LLM prompt factors (Panel C)}
+  \label{tab:breakdown}
+  % Source: 02_summary.md Sections 4, 6; defect_type_by_suite.csv; 03_defect_detection_matrix.csv
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{0.92}
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{@{}ll ccccccc@{}}
+    \toprule
+    \textbf{Panel / Dimension} & \textbf{Category / Level} & \textbf{Total} & \textbf{TFD} & \textbf{\texttt{PICT\_plain}} & \textbf{\texttt{PICT\_constr.}} & \textbf{LLM Single ($C_1$--$C_6$)} & \textbf{\texttt{Best\_LLM} ($C_1$)} & \textbf{\texttt{LLM\_Union}} \\
+    \midrule
+    \multicolumn{9}{@{}l}{\textit{Panel A: By defect category across all four applications ($N=60$; \texttt{PICT\_constrained} evaluated on the 40 Enhanced defects only)}} \\
+    Defect Category & Boundary & 13 (9 Enh.) & 13/13 (100.0\%) & 1/13 (7.7\%) & 0/9 (0.0\%) & $C_{1\text{--}3},C_6$: 9; $C_4$: 8; $C_5$: 10/13 & 9/13 (69.2\%) & 13/13 (100.0\%) \\
+    & Arithmetic & 15 (10 Enh.) & 15/15 (100.0\%) & 14/15 (93.3\%) & 10/10 (100.0\%) & All $C_1$--$C_6$: 15/15 (100.0\%) & 15/15 (100.0\%) & 15/15 (100.0\%) \\
+    & Logic & 18 (7 Enh.) & 18/18 (100.0\%) & 17/18 (94.4\%) & 7/7 (100.0\%) & $C_{1\text{--}4}$: 18; $C_5$: 17; $C_6$: 16/18 & 18/18 (100.0\%) & 18/18 (100.0\%) \\
+    & Conditional (Enh.) & 14 (14 Enh.) & 14/14 (100.0\%) & 13/14 (92.9\%) & 10/14 (71.4\%) & $C_{1\text{--}4},C_6$: 13; $C_5$: 12/14 & 13/14 (92.9\%) & 13/14 (92.9\%) \\
+    \midrule
+    \multicolumn{9}{@{}l}{\textit{Panel B: By application domain ($N=30$ defects per domain: 10 Basic + 20 Enhanced)}} \\
+    Domain & Package Shipping & 30 (20 Enh.) & 30/30 (100.0\%) & 21/30 (70.0\%) & 14/20 (70.0\%) & $C_1$--$C_5$: 28/30; $C_6$: 27/30 & 28/30 (93.3\%) & 30/30 (100.0\%) \\
+    & Payroll Calculator & 30 (20 Enh.) & 30/30 (100.0\%) & 24/30 (80.0\%) & 13/20 (65.0\%) & $C_1$--$C_3$: 27/30; $C_4$--$C_6$: 26/30 & 27/30 (90.0\%) & 29/30 (96.7\%) \\
+    \midrule
+    \multicolumn{9}{@{}l}{\textit{Panel C: Descriptive LLM prompt factor summary across 24 suites (1 run per condition; 60 defects per condition)}} \\
+    Prompt Detail & Low Detail ($C_1$--$C_3$) & 180 opps.\ (12 suites) & \multicolumn{6}{l}{165 / 180 pooled (91.7\%); mean of per-suite rates = 93.75\%; mean \texttt{defects\_per\_test} = 0.500} \\
+    & High Detail ($C_4$--$C_6$) & 180 opps.\ (12 suites) & \multicolumn{6}{l}{161 / 180 pooled (89.4\%); mean of per-suite rates = 92.08\%; mean \texttt{defects\_per\_test} = 0.491} \\
+    Exemplar Shots & 0-shot ($C_1, C_4$) & 120 opps.\ (8 suites) & \multicolumn{6}{l}{109 / 120 pooled (90.8\%); mean of per-suite rates = 93.13\%; mean \texttt{defects\_per\_test} = 0.496} \\
+    & 1-shot ($C_2, C_5$) & 120 opps.\ (8 suites) & \multicolumn{6}{l}{109 / 120 pooled (90.8\%); mean of per-suite rates = 93.13\%; mean \texttt{defects\_per\_test} = 0.496} \\
+    & 3-shot ($C_3, C_6$) & 120 opps.\ (8 suites) & \multicolumn{6}{l}{108 / 120 pooled (90.0\%); mean of per-suite rates = 92.50\%; mean \texttt{defects\_per\_test} = 0.493} \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+Panels~A and~B of Table~\ref{tab:breakdown} break down detection by defect type and domain. All LLM conditions detected 15/15 arithmetic defects, and $C_1$--$C_4$ detected 18/18 logic defects ($C_5$: 17/18; $C_6$: 16/18). Boundary defects were the main automated weakness: \texttt{PICT\_plain} caught 1/13 (7.7\%, missing 12/13) and \texttt{PICT\_constrained} caught 0/9---a hypothesis consistent with the data is our use of range midpoints for continuous parameters in PICT---while single LLM suites caught 8--10/13 ($C_1$--$C_4, C_6$ missed \texttt{EnhancedPackage} D12 and D14, caught by $C_5$; in \texttt{EnhancedPayroll}, $C_1, C_2, C_6$ missed D11 while $C_1$--$C_5$ missed D17, caught only by $C_6$), and \texttt{LLM\_Union} caught 13/13. Across domains (Panel~B), the TFD--LLM gap was 2--3 defects in Package (30/30 vs.\ 27--28/30) and 3--4 in Payroll (30/30 vs.\ 26--27/30), vanished in Basic Package (10/10) and for \texttt{LLM\_Union} (30/30 Package, 29/30 Payroll), and was not statistically significant; thus, H2 ($\text{TFD} > \text{LLM}$ in Package) is not supported by our data.
+
+\section{Discussion}
+\label{sec:discussion}
+% Source: 01_source_paper.pdf Tables 5, 7, 8, 9 and Appendices C1-C2; 02_summary.md Sections 1-9
+% Binary detection recomputation from Gillenson et al. (2026) Tables 5 & 7 (counting defects with >0 failing tests out of 10):
+% Basic Package (Table 5, p. 12):
+%   TFD: [2,1,8,1,1,2,6,7,20,20] -> 10/10 non-zero (sum = 68)
+%   PICT: [3,0,6,1,3,3,5,9,20,20] -> 9/10 non-zero, misses D2 (sum = 70)
+%   ChatGPT-4/4o: [1,1,4,2,2,4,5,9,20,20] -> 10/10 non-zero (sum = 68)
+% Basic Payroll (Table 5, p. 12):
+%   TFD: [5,20,20,3,0,3,0,12,0,0] -> 6/10 non-zero, misses D5,D7,D9,D10 (sum = 63)
+%   PICT: [6,20,20,8,0,5,0,16,0,0] -> 6/10 non-zero, misses D5,D7,D9,D10 (sum = 75)
+%   ChatGPT-4/4o: [4,20,20,7,0,5,0,14,0,0] -> 6/10 non-zero, misses D5,D7,D9,D10 (sum = 69)
+% Enhanced Package (Table 7, pp. 13-14):
+%   TFD: [1,2,0,2,11,2,3,3,0,0] -> 7/10 non-zero, misses D3,D9,D10 (sum = 24)
+%   PICT: [2,0,0,0,5,0,3,2,3,0] -> 5/10 non-zero, misses D2,D3,D4,D6,D10 (sum = 15)
+%   ChatGPT-4o: [0,1,0,0,3,3,4,4,0,0] -> 5/10 non-zero, misses D1,D3,D4,D9,D10 (sum = 15)
+%   ChatGPT-4o + sample TC: [1,2,0,0,4,3,2,7,0,0] -> 6/10 non-zero, misses D3,D4,D9,D10 (sum = 19)
+% Enhanced Payroll (Table 7, pp. 13-14):
+%   TFD: [9,4,9,6,0,8,5,3,1,6] -> 9/10 non-zero, misses D5 (sum = 51)
+%   PICT: [6,1,5,1,0,8,5,3,1,6] -> 9/10 non-zero, misses D5 (sum = 36)
+%   ChatGPT-4o: [16,4,13,6,0,8,5,3,1,6] -> 9/10 non-zero, misses D5 (sum = 62)
+%   ChatGPT-4o + sample TC: [18,6,7,2,0,2,9,7,6,7] -> 9/10 non-zero, misses D5 (sum = 64)
+
+Recomputing Tables~5 and~7 of Gillenson et al.~\cite{Gillenson2026} as binary defect detection gives 10/10 (TFD, ChatGPT-4/4o) and 9/10 (PICT) in Basic Package; 6/10 for all three in Basic Payroll; 7/10 (TFD), 5/10 (PICT, ChatGPT-4o), and 6/10 (ChatGPT-4o + sample) in Enhanced Package; and 9/10 for all four in Enhanced Payroll. Thus, their reading that LLMs outperformed TFD in payroll rests on summed failing tests (62--64 vs.\ 51) rather than binary detection. In our benchmark, single Gemini 3.1 Pro suites achieved 88.3\%--91.7\% detection and 100.0\% oracle accuracy, trailing TFD by 2--4 defects per domain on exact boundary ties and multi-rule conditions, while negative tests (25.0\%--50.0\% of TFD/LLM rows) were vital for validation-removal faults. Reporting anomalies in~\cite{Gillenson2026} (e.g., five vs.\ six prompt principles, table/appendix cross-references, and a cross-domain sample row) are detailed in our supplement.
+
+\section{Limitations}
+\label{sec:limitations}
+% Source: 02_summary.md Section 12; 07_known_issues.md Sections 1-6; pict_facts.md Sections 1-4; 06_prompts_and_logs.md Sections 1-4
+
+Ten limitations apply (detailed in the supplement): (a)~the tester's no-AI statement and 280.0-minute times are self-reported and unverified; (b)~seeded defects are mutations of specification constants and thresholds (our interpretations for D1--D10 and extensions for D11--D20), so a threshold-driven tester can hit a ceiling and TFD's 100\% does not prove general superiority; (c)~\texttt{Best\_LLM} ($C_1$, tied with $C_2, C_3$) and \texttt{LLM\_Union} are chosen post hoc and use more tests on Enhanced apps (210 rows / 77--121 distinct inputs for \texttt{LLM\_Union}; 237--245 rows / 112--148 distinct inputs with \texttt{PICT\_plain}) than TFD (35 rows); (d)~the 24 LLM runs are 17 distinct suites; (e)~we used one run per condition, one model family (Gemini 3.1 Pro), and one tester; (f)~LLM minutes (19.69~min) are response time only, TFD minutes are self-reported, and PICT run time was not measured separately; (g)~pooled defects ($N=60$) are not fully independent; (h)~PICT used range midpoints chosen by us, seed-42 sampling above quota, and unpadded below-quota suites (16, 27, 32 rows); (i)~every specification contained worked numerical examples that some suites reused, so zero-shot prompts still contained numerical examples (zero-shot only means no sample test case; few-shot exemplars differed from specification examples); and (j)~log timestamps are approximate.
+
+\section{Conclusion}
+\label{sec:conclusion}
+% Source: 02_summary.md Sections 1-9; Mandatory Format Rules R5, R6
+
+Across four Java testbeds and 60 defects replicating and extending Gillenson et al.~\cite{Gillenson2026}, human TFD detected 100.0\% (60/60), single Gemini 3.1 Pro suites detected 88.3\%--91.7\% (53--55/60) with 100.0\% oracle accuracy, and unconstrained PICT detected 75.0\% (45/60); no single LLM condition differed significantly from TFD or PICT after 12-comparison Holm correction, while pooling all six LLM runs with PICT reached 100.0\% using 237--245 rows (112--148 distinct inputs) per Enhanced app.
+
+\paragraph{Declarations and Acknowledgments.}
+Testbeds, specifications, and analysis scripts were developed with AI coding assistants and verified by hand calculation and independent re-implementation; LLM suites came from Gemini 3.1 Pro (\texttt{High}) on 4 November 2026; text drafting was assisted by Claude and checked by the authors. Data and code availability: [SUPPLEMENTARY URL - TO BE PROVIDED]. Funding: This research received no external funding. Competing interests: The authors declare no competing interests. Acknowledgments: We thank the anonymous external software tester for independently designing the human TFD test suites.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\end{document}

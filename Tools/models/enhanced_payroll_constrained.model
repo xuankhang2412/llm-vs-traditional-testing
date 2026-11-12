@@ -1,0 +1,26 @@
+hourly: 17.50, 22.50, 27.50, 32.50, 37.50, 45.00
+regularHours: 40.0
+overtimeHours: 0.0, 3.0, 8.0, 12.0
+holidayHours: 0.0, 3.0, 8.0
+state: 1, 2, 3
+medical: 0, 1, 2, 3
+dental: 0, 1, 2
+vision: 0, 1, 2
+unitedWay: 0.0, 5.0, 20.0
+pension: 0.0, 50.0, 200.0
+ltd: 0, 1
+std: 0, 1
+parking: 0, 1
+
+# Rule 1: Low-Wage Overtime Limit
+IF [hourly] = 17.50 THEN [overtimeHours] IN {0.0, 3.0, 8.0};
+
+# Rule 4: Medical requires Dental
+IF [medical] IN {1, 2, 3} THEN [dental] IN {1, 2};
+
+# Rule 5: High-Earner Medical Plan
+IF [hourly] = 45.00 THEN [medical] IN {2, 3};
+
+# Rule 9: LTD requires STD
+IF [ltd] = 1 THEN [std] = 1;
+

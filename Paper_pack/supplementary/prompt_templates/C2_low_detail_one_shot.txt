@@ -1,0 +1,9 @@
+Please read the following specification carefully:
+
+{SPEC}
+
+Here is an example test case:
+{EXAMPLES}
+
+Generate {N} test cases based on the specification above.
+Output the test cases strictly as CSV data.

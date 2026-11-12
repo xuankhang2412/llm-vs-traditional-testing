@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.swt301</groupId>
+    <artifactId>swt301-workspace</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>SWT301 Test Workspace</name>
+
+    <modules>
+        <module>Project1</module>
+        <module>Project2</module>
+        <module>Project3</module>
+        <module>Project4</module>
+    </modules>
+</project>
+

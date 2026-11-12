@@ -1,0 +1,12 @@
+weight: 1.0, 6.0, 17.5, 32.5, 45.0, 55.0
+origin: 1, 2, 3, 4
+destination: 1, 2, 3, 4
+deliveryOption: 1, 2, 3, 4, 5, 6, 7
+packaging: 1, 2, 3, 4, 5, 6, 7, 8
+signature: 0, 1, 2
+locationType: 0, 1
+saturday: 0, 1
+hold: 0, 1
+fragile: 0, 1
+dangerous: 0, 1
+

@@ -1,0 +1,4 @@
+"File","Line","MatchedWord","Content"
+"csv_format.md","1","Benchmark","# Benchmark CSV Format Specification"
+"csv_format.md","3","benchmark","This document defines the standard CSV input/output format for the benchmark test suites across all four target applications."
+"csv_format.md","16","PICT, baseline, oracle","- In unlabelled suites (such as pure PICT generated suites before baseline oracle evaluation), the `expected` column is left empty."

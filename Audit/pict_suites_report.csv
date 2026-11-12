@@ -1,0 +1,8 @@
+app,suite,quota,raw_size,final_size,invalid_tests,valid_tests,defects_detected,total_defects,detection_rate,detection_per_valid_test
+BasicPackage,PICT_plain,20,32,20,0,20,8,10,0.8000,0.4000
+BasicPayroll,PICT_plain,20,16,16,0,16,8,10,0.8000,0.5000
+EnhancedPackage,PICT_plain,35,61,35,25,10,13,20,0.6500,1.3000
+EnhancedPackage,PICT_constrained,35,63,35,0,35,14,20,0.7000,0.4000
+EnhancedPayroll,PICT_plain,35,27,27,11,16,16,20,0.8000,1.0000
+EnhancedPayroll,PICT_constrained,35,32,32,0,32,13,20,0.6500,0.4063
+

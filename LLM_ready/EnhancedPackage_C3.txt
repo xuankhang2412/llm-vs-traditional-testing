@@ -1,0 +1,155 @@
+Please read the following specification carefully:
+
+# Enhanced Package Shipping Specification
+Version 1.1.1
+
+## 1. Overview
+The Enhanced Package Shipping system calculates shipping costs for domestic parcels based on parcel weight, origin and destination zones, delivery service options, packaging types, and special service adjustments.
+
+## 2. Input Parameters
+
+| Field Name | Type | Valid Domain | Description |
+|---|---|---|---|
+| `weight` | Floating-point | `0.0 < weight <= 60.0` | Parcel weight in pounds (lbs) |
+| `origin` | Integer | `1` to `4` | Origin domestic zone |
+| `destination` | Integer | `1` to `4` | Destination domestic zone |
+| `deliveryOption` | Integer | `1` to `7` | Delivery speed service option |
+| `packaging` | Integer | `1` to `8` | Packaging type code |
+| `signature` | Integer | `0` to `2` | Signature service requirement |
+| `locationType` | Integer | `0` or `1` | Destination location type (0=Business, 1=Residence) |
+| `saturday` | Integer | `0` or `1` | Saturday delivery service flag |
+| `hold` | Integer | `0` or `1` | Hold at courier location flag |
+| `fragile` | Integer | `0` or `1` | Fragile package handling flag |
+| `dangerous` | Integer | `0` or `1` | Hazardous / dangerous goods flag |
+
+Any input values violating the valid domains must result in an error rejection (`ERROR`).
+
+## 3. Rate Tables & Option Schedules
+
+### 3.1 Base Rate per Pound (Symmetric)
+Rates are symmetric between origin and destination zones (rate from A to B equals rate from B to A):
+
+| Zone Pair | Rate per Pound ($/lb) |
+|---|---|
+| Same Zone (1-1, 2-2, 3-3, 4-4) | $2.00 |
+| Zones 1 and 2 | $2.50 |
+| Zones 1 and 3 | $3.00 |
+| Zones 1 and 4 | $3.75 |
+| Zones 2 and 3 | $2.75 |
+| Zones 2 and 4 | $3.25 |
+| Zones 3 and 4 | $2.30 |
+
+### 3.2 Delivery Service Options & Multipliers
+
+| Code | Option Name | Standard Multiplier | Special Multiplier Condition |
+|---|---|---|---|
+| `1` | Same Day | 2.1 | 2.75 if fragile handling is active (`fragile = 1`) |
+| `2` | First Overnight | 1.5 | - |
+| `3` | Priority Overnight | 1.2 | - |
+| `4` | Standard Overnight | 1.0 | - |
+| `5` | 2-day AM | 0.9 | - |
+| `6` | 2-day | 0.8 | - |
+| `7` | Express Saver | 0.6 | - |
+
+### 3.3 Packaging Types, Weight Limits, and Fees
+Codes 6 through 8 represent customer-packaged dimension tiers; no dimension input is required:
+
+| Code | Packaging Description | Weight Capacity Limit | Fee / Adjustment |
+|---|---|---|---|
+| `1` | Envelope | weight <= 2.0 lbs | +$0.00 |
+| `2` | Small Box | weight <= 10.0 lbs | +$0.00 |
+| `3` | Medium Box | weight <= 25.0 lbs | +$7.00 |
+| `4` | Large Box | weight <= 40.0 lbs | +$18.00 |
+| `5` | Tube | weight <= 10.0 lbs | +$5.00 |
+| `6` | Customer Packaged (total dimensions <= 30 inches) | weight <= 60.0 lbs | +$0.00 |
+| `7` | Customer Packaged (dimensions > 30 and <= 60 inches) | weight <= 60.0 lbs | Multiply running price by 1.15 |
+| `8` | Customer Packaged (dimensions > 60 and <= 100 inches) | weight <= 60.0 lbs | Multiply running price by 1.30 |
+
+If parcel weight exceeds the specified packaging capacity limit, the transaction must be rejected (`ERROR`).
+
+### 3.4 Service Adjustments
+- **Signature Service**:
+  - `signature = 0` (None): $0.00
+  - `signature = 1` (Indirect): +$3.00
+  - `signature = 2` (Direct): +$10.00
+- **Location Surcharge**:
+  - `locationType = 1` (Residence): +$10.00 (Business `locationType = 0` has no surcharge)
+- **Saturday Delivery**:
+  - Standard Saturday fee is +$20.00.
+  - Special Rule: If `locationType = 1` (Residence), destination zone is 4, and `saturday = 1`, the Saturday fee is reduced to +$10.00.
+- **Hold at Location**:
+  - Standard hold fee is +$15.00.
+  - Special Rule: If `deliveryOption = 7` (Express Saver) and `hold = 1`, the hold fee is waived ($0.00).
+- **Fragile Handling**:
+  - Standard fragile fee is +$25.00.
+  - Special Rule: If `fragile = 1` and `signature = 2` (Direct signature), an additional +$30.00 surcharge is assessed.
+- **Dangerous Goods**:
+  - Standard dangerous goods fee is +$50.00.
+  - Special Rule: If `dangerous = 1` and `signature = 0`, an additional +$40.00 surcharge is assessed.
+
+## 4. Special Business & Validation Rules
+
+- **Rule 1 (Discount on Local Overnight/Express)**: If origin equals destination (`origin = destination`) and delivery option is in `{1, 2, 3}`, a 10% discount is applied to the final running total (price multiplied by 0.90).
+- **Rule 2 (Fragile Same-Day Multiplier)**: When `fragile = 1` and `deliveryOption = 1`, the delivery multiplier is 2.75 instead of 2.1.
+- **Rule 3 (Hold Fee Waiver)**: Express Saver (`deliveryOption = 7`) with hold at location incurs no hold fee.
+- **Rule 4 (Business Signature Requirement)**: Business deliveries (`locationType = 0`) require signature option 1 or 2. If `signature = 0`, reject the request (`ERROR`).
+- **Rule 5 (Heavy Parcel Signature Requirement)**: Parcels weighing over 50.0 lbs (`weight > 50.0`) require signature option 1 or 2. If `signature = 0`, reject the request (`ERROR`).
+- **Rule 6 (Fragile Direct Signature Surcharge)**: When `fragile = 1` and `signature = 2`, add an extra $30.00 fee.
+- **Rule 7 (Fragile and Dangerous Incompatibility)**: Fragile handling and dangerous goods cannot be combined. If `fragile = 1` and `dangerous = 1`, reject the request (`ERROR`).
+- **Rule 8 (Dangerous Goods Permitted Services)**: Dangerous goods (`dangerous = 1`) are only accepted for delivery options 1, 2, 3, or 4. Options 5, 6, and 7 must be rejected (`ERROR`).
+- **Rule 9 (Residential Zone 4 Saturday Concession)**: Saturday delivery to a residence in destination zone 4 is charged at +$10.00 instead of +$20.00.
+- **Rule 10 (Dangerous Goods Unsigned Surcharge)**: When `dangerous = 1` and `signature = 0`, add an extra $40.00 fee.
+
+## 5. Calculation Procedure & Order of Operations
+
+The calculation follows a calibrated sequential order:
+
+1. **Base Price**:
+   $$\text{basePrice} = \text{baseRate}(\text{origin}, \text{destination}) \times \text{weight}$$
+
+2. **Delivery Option Scaling**:
+   Apply delivery multiplier (taking into account Rule 2 if fragile same-day):
+   $$\text{scaledPrice} = \text{basePrice} \times \text{deliveryMultiplier}$$
+
+3. **Packaging Tier Application**:
+   - For packaging codes 1 through 6: Add the fixed fee (+$0, +$7, +$18, or +$5).
+   - For packaging code 7: Multiply current price by 1.15.
+   - For packaging code 8: Multiply current price by 1.30.
+
+4. **Additive Adjustments**:
+   Add each applicable service fee to the running price:
+   - Signature fee ($3 for indirect, $10 for direct)
+   - Residence fee ($10 if residential)
+   - Saturday fee ($10 if residential in zone 4, else $20)
+   - Hold fee ($0 if Express Saver, else $15)
+   - Fragile fee ($25 if fragile)
+   - Dangerous goods fee ($50 if dangerous)
+   - Extra fragile direct signature fee ($30 if fragile and direct signature)
+   - Extra dangerous unsigned fee ($40 if dangerous and signature 0)
+
+5. **Discount Application**:
+   If origin equals destination and delivery option is 1, 2, or 3 (Rule 1), apply a 10% discount to the total running price:
+   $$\text{discountedPrice} = \text{runningPrice} \times 0.90$$
+
+6. **Rounding Policy**:
+   The final total price is rounded to two decimal places using standard half-up rounding.
+
+
+---
+
+## 6. Clarifications (v1.1)
+
+- **Intermediate Precision and Final Rounding**: All intermediate calculation steps preserve full numerical precision without intermediate rounding. Only the final total price is rounded to two decimal places using standard half-up rounding.
+  - *Worked Example*: Weight = `1.05`, Origin = `1`, Destination = `1` (base rate $2.00), Delivery Option = `3` (multiplier 1.2), Packaging = `7` (multiplier 1.15), Signature = `0`, Location Type = `1` (Residence, +$10.00), all other flags = `0`. Base price is $2.00 \times 1.05 = 2.10$. Scaled price is $2.10 \times 1.2 = 2.52$. Packaging adjusted price is $2.52 \times 1.15 = 2.898$. Running price with residence fee is $2.898 + 10.00 = 12.898$. Local discount (10%) yields $12.898 \times 0.90 = 11.6082$, rounding to `$11.61`.
+- **Validation Rule Priority and Multiple Violations**: If an input vector violates more than one domain constraint or validation rule, the request is rejected with `ERROR`. The evaluation order of validation checks does not affect the outcome.
+- **Out-of-Domain and Malformed Inputs**: Any input value outside the specified domains (such as weight <= 0 or > 60, zone codes outside 1–4, packaging outside 1–8, non-integer values where integers are expected, or missing values) results in an error rejection (`ERROR`).
+- **Rounding of Ties**: Ties at the third decimal are rounded away from zero, e.g. 12.345 -> 12.35 and -161.795 -> -161.80.
+
+Here are example test cases:
+weight,origin,destination,deliveryOption,packaging,signature,locationType,saturday,hold,fragile,dangerous,expected
+35.0,3,3,2,4,1,0,1,0,0,0,131.40
+15.0,1,2,4,3,1,1,0,0,0,0,57.50
+8.0,2,3,6,2,1,0,0,1,0,0,35.60
+
+Generate 35 test cases based on the specification above.
+Output the test cases strictly as CSV data.

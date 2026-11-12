@@ -1,0 +1,108 @@
+Please read the following specification carefully:
+
+# Basic Payroll Specification
+Version 1.1.1
+
+## 1. Overview
+The Basic Payroll system computes weekly gross salary, tax withholdings, voluntary benefit deductions, and final net pay for hourly employees.
+
+## 2. Input Parameters
+
+| Field Name | Type | Valid Domain | Description |
+|---|---|---|---|
+| `hourlySalary` | Floating-point | `15.00 <= hourlySalary <= 50.00` | Hourly wage in dollars |
+| `regularHours` | Floating-point | `>= 0.0` | Regular hours worked in the workweek |
+| `overtimeHours` | Floating-point | `>= 0.0` | Overtime hours worked (paid at 1.5x regular wage) |
+| `holidayHours` | Floating-point | `>= 0.0` | Holiday hours worked (paid at 2.0x regular wage) |
+| `medicalPlan` | Integer | `0` to `3` | Medical insurance plan choice |
+| `dentalPlan` | Integer | `0` to `2` | Dental insurance plan choice |
+| `visionPlan` | Integer | `0` to `2` | Vision insurance plan choice |
+| `unitedWay` | Floating-point | `>= 0.0` | Fixed dollar contribution to United Way |
+| `pension` | Floating-point | `>= 0.0` | Requested pension contribution (subject to cap) |
+| `longTermDisability` | Integer | `0` or `1` | Long-term disability insurance flag |
+| `shortTermDisability` | Integer | `0` or `1` | Short-term disability insurance flag |
+| `parking` | Integer | `0` or `1` | Employer parking permit flag |
+
+Any input values violating the valid domains must result in an error rejection (`ERROR`).
+
+## 3. Rate Tables & Plan Schedules
+
+### 3.1 Federal Income Tax Brackets
+Federal withholding is computed against weekly gross salary according to the hourly wage tier:
+
+| Hourly Salary Range | Federal Tax Rate |
+|---|---|
+| $15.00 to $20.00 | 10% |
+| $20.01 to $40.00 | 22% |
+| $40.01 to $50.00 | 35% |
+
+### 3.2 Statutory Payroll Taxes (FICA)
+- **Social Security Tax**: 6.20% of weekly gross salary
+- **Medicare Tax**: 1.45% of weekly gross salary
+
+### 3.3 Voluntary Benefit Deduction Schedules
+- **Medical Insurance**:
+  - Plan 0 (None): $0.00
+  - Plan 1: $50.00
+  - Plan 2: $75.00
+  - Plan 3: $125.00
+- **Dental Insurance**:
+  - Plan 0 (None): $0.00
+  - Plan 1: $5.00
+  - Plan 2: $10.00
+- **Vision Insurance**:
+  - Plan 0 (None): $0.00
+  - Plan 1: $5.00
+  - Plan 2: $12.00
+- **Disability Coverage**:
+  - Long-Term Disability (`longTermDisability = 1`): $14.00 (else $0.00)
+  - Short-Term Disability (`shortTermDisability = 1`): $9.00 (else $0.00)
+- **Parking Facility Fee**:
+  - Parking Permit (`parking = 1`): $39.50 (else $0.00)
+- **United Way**:
+  - Exact requested contribution amount.
+- **Pension Contribution**:
+  - Deducted amount is the requested pension contribution capped at 10% of gross salary:
+    $$\text{pensionDeduction} = \min(\text{pension}, 0.10 \times \text{grossSalary})$$
+
+## 4. Calculation Procedure & Order of Operations
+
+1. **Gross Salary Calculation**:
+   $$\text{basePay} = \text{hourlySalary} \times \text{regularHours}$$
+   $$\text{overtimePay} = \text{hourlySalary} \times \text{overtimeHours} \times 1.5$$
+   $$\text{holidayPay} = \text{hourlySalary} \times \text{holidayHours} \times 2.0$$
+   $$\text{grossSalary} = \text{basePay} + \text{overtimePay} + \text{holidayPay}$$
+
+2. **Tax Withholdings**:
+   $$\text{federalTax} = \text{grossSalary} \times \text{federalTaxRate}$$
+   $$\text{socialSecurity} = \text{grossSalary} \times 0.062$$
+   $$\text{medicare} = \text{grossSalary} \times 0.0145$$
+   $$\text{totalTaxes} = \text{federalTax} + \text{socialSecurity} + \text{medicare}$$
+
+3. **Total Deductions**:
+   $$\text{totalDeductions} = \text{medicalDeduction} + \text{dentalDeduction} + \text{visionDeduction} + \text{pensionDeduction} + \text{unitedWay} + \text{longTermDisabilityFee} + \text{shortTermDisabilityFee} + \text{parkingFee}$$
+
+4. **Net Salary**:
+   $$\text{netSalary} = \text{grossSalary} - \text{totalTaxes} - \text{totalDeductions}$$
+
+5. **Rounding Policy**:
+   Both final gross salary and final net salary are rounded to two decimal places using standard half-up rounding.
+
+
+---
+
+## 5. Clarifications (v1.1)
+
+- **Intermediate Precision and Final Rounding**: All intermediate calculation steps preserve full numerical precision. Only final gross salary and final net salary are rounded to two decimal places using standard half-up rounding.
+  - *Worked Example*: Hourly Salary = `17.35`, Regular Hours = `37.5`, all other inputs = `0`. Gross salary is $17.35 \times 37.5 = 650.625$. Federal tax (10%) is $65.0625$, Social Security (6.2%) is $40.33875$, Medicare (1.45%) is $9.4340625$. Total taxes are $114.8353125$. Net salary is $650.625 - 114.8353125 = 535.7896875$, rounding to `$535.79`.
+- **Negative Net Salary**: No lower bound or zero-clamping is applied to net salary. If total taxes and deductions exceed gross pay, the resulting net salary is negative and is output as a negative amount.
+- **Validation Rule Priority and Multiple Violations**: If an input violates more than one domain or validation constraint, the request is rejected with `ERROR`. The evaluation order of validation checks does not affect the outcome.
+- **Out-of-Domain and Malformed Inputs**: Any input value outside the specified domains (such as hourly rate outside $15.00–$50.00, negative hours, negative contributions, plan codes outside specified integers, non-integer values where integers are expected, or missing values) results in an error rejection (`ERROR`).
+- **Rounding of Ties**: Ties at the third decimal are rounded away from zero, e.g. 12.345 -> 12.35 and -161.795 -> -161.80.
+
+Here is an example test case:
+hourlySalary,regularHours,overtimeHours,holidayHours,medicalPlan,dentalPlan,visionPlan,unitedWay,pension,longTermDisability,shortTermDisability,parking,expected
+28.0,40.0,0.0,0.0,1,1,0,15.0,50.0,0,0,0,667.92
+
+Generate 20 test cases based on the specification above.
+Output the test cases strictly as CSV data.

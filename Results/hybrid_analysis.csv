@@ -1,0 +1,29 @@
+app,total_defects,combination,methods_included,total_tests_in_combination,detected_count,detection_rate,best_single_count,gain_abs,gain_pct
+BasicPackage,10,"TFD + Best LLM","TFD,LLM_C1",40,10,1.0000,10,0,0.00%
+BasicPackage,10,"TFD + PICT_plain","TFD,PICT_plain",40,10,1.0000,10,0,0.00%
+BasicPackage,10,"Best LLM + PICT_plain","LLM_C1,PICT_plain",40,10,1.0000,10,0,0.00%
+BasicPackage,10,"TFD + Best LLM + PICT_plain","TFD,LLM_C1,PICT_plain",60,10,1.0000,10,0,0.00%
+BasicPackage,10,"TFD + LLM_Union","TFD,LLM_Union",140,10,1.0000,10,0,0.00%
+BasicPackage,10,"LLM_Union + PICT_plain","LLM_Union,PICT_plain",140,10,1.0000,10,0,0.00%
+BasicPackage,10,"TFD + LLM_Union + PICT_plain","TFD,LLM_Union,PICT_plain",160,10,1.0000,10,0,0.00%
+BasicPayroll,10,"TFD + Best LLM","TFD,LLM_C1",40,10,1.0000,10,0,0.00%
+BasicPayroll,10,"TFD + PICT_plain","TFD,PICT_plain",36,10,1.0000,10,0,0.00%
+BasicPayroll,10,"Best LLM + PICT_plain","LLM_C1,PICT_plain",36,10,1.0000,10,0,0.00%
+BasicPayroll,10,"TFD + Best LLM + PICT_plain","TFD,LLM_C1,PICT_plain",56,10,1.0000,10,0,0.00%
+BasicPayroll,10,"TFD + LLM_Union","TFD,LLM_Union",140,10,1.0000,10,0,0.00%
+BasicPayroll,10,"LLM_Union + PICT_plain","LLM_Union,PICT_plain",136,10,1.0000,10,0,0.00%
+BasicPayroll,10,"TFD + LLM_Union + PICT_plain","TFD,LLM_Union,PICT_plain",156,10,1.0000,10,0,0.00%
+EnhancedPackage,20,"TFD + Best LLM","TFD,LLM_C1",70,20,1.0000,20,0,0.00%
+EnhancedPackage,20,"TFD + PICT_plain","TFD,PICT_plain",70,20,1.0000,20,0,0.00%
+EnhancedPackage,20,"Best LLM + PICT_plain","LLM_C1,PICT_plain",70,18,0.9000,18,0,0.00%
+EnhancedPackage,20,"TFD + Best LLM + PICT_plain","TFD,LLM_C1,PICT_plain",105,20,1.0000,20,0,0.00%
+EnhancedPackage,20,"TFD + LLM_Union","TFD,LLM_Union",245,20,1.0000,20,0,0.00%
+EnhancedPackage,20,"LLM_Union + PICT_plain","LLM_Union,PICT_plain",245,20,1.0000,20,0,0.00%
+EnhancedPackage,20,"TFD + LLM_Union + PICT_plain","TFD,LLM_Union,PICT_plain",280,20,1.0000,20,0,0.00%
+EnhancedPayroll,20,"TFD + Best LLM","TFD,LLM_C1",70,20,1.0000,20,0,0.00%
+EnhancedPayroll,20,"TFD + PICT_plain","TFD,PICT_plain",62,20,1.0000,20,0,0.00%
+EnhancedPayroll,20,"Best LLM + PICT_plain","LLM_C1,PICT_plain",62,18,0.9000,17,1,5.88%
+EnhancedPayroll,20,"TFD + Best LLM + PICT_plain","TFD,LLM_C1,PICT_plain",97,20,1.0000,20,0,0.00%
+EnhancedPayroll,20,"TFD + LLM_Union","TFD,LLM_Union",245,20,1.0000,20,0,0.00%
+EnhancedPayroll,20,"LLM_Union + PICT_plain","LLM_Union,PICT_plain",237,20,1.0000,19,1,5.26%
+EnhancedPayroll,20,"TFD + LLM_Union + PICT_plain","TFD,LLM_Union,PICT_plain",272,20,1.0000,20,0,0.00%

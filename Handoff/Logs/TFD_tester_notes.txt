@@ -1,0 +1,264 @@
+SWT301 BLACK-BOX TEST SUITE DESIGN NOTES
+========================================
+
+1. TIME SPENT PER TEST SUITE (EFFORT BREAKDOWN)
+-----------------------------------------------
+- Basic Package Shipping (BasicPackage_TFD.csv, 20 test cases): 45 minutes
+  (12 min specification & domain analysis, 18 min equivalence/boundary/pair selection, 15 min manual/spreadsheet calculation & rounding verification)
+- Basic Payroll (BasicPayroll_TFD.csv, 20 test cases): 55 minutes
+  (15 min tax bracket & deduction analysis, 20 min boundary/tie/negative net pay design, 20 min full-precision tax & net pay calculation)
+- Enhanced Package Shipping (EnhancedPackage_TFD.csv, 35 test cases): 85 minutes
+  (25 min analysis of 10 business rules & packaging limits, 35 min positive/counter-check/single-fault negative case design, 25 min sequential calculation verification)
+- Enhanced Payroll (EnhancedPayroll_TFD.csv, 35 test cases): 95 minutes
+  (25 min multi-state tax schedule & 10-rule interaction analysis, 40 min boundary/subsidy/credit/single-fault test design, 30 min full-precision calculation & verification)
+- Total Effort Across All 4 Suites (110 test cases): 280 minutes (4 hours 40 minutes)
+
+2. SPECIFICATION OBSERVATIONS, AMBIGUITIES, AND ASSUMPTIONS
+-----------------------------------------------------------
+a) CSV Header vs. test_id Column:
+   The assignment instructions mention 'test_id: T01, T02, ...' alongside 'Do not change the header, the column order or the column names. csv_format.md explains every column.' Neither csv_format.md nor the four attached *_template.csv files include a test_id column. To preserve strict compatibility with your automated grading/mutation harness, the four CSV files strictly retain the exact headers from csv_format.md and the templates (without adding an extra test_id column), while T01..T20 and T01..T35 are documented in order below corresponding to data rows 1..20 and 1..35.
+
+b) Single-Violation Negative Tests (Fault Isolation):
+   Every negative test case (expected = ERROR) is constructed to violate exactly ONE domain boundary or business validation rule while keeping all other parameters strictly valid. For example, in Enhanced Package T27 (testing Rule 5: weight > 50.0 lbs with signature = 0), locationType is set to 1 (Residence) and packaging is set to 6 (capacity 60.0 lbs) so that Rule 4 (business signature requirement) and packaging capacity limits are not simultaneously triggered. Similarly, in Enhanced Payroll T25 (testing Rule 5: hourly >= 40.01 with medical = 1), dental is set to 1 so Rule 4 (medical-dental dependency) does not mask a fault in Rule 5.
+
+c) Intermediate Precision and Rounding Policy:
+   Per Section 5/6 Clarifications (v1.1) in all four specifications, full numerical precision is preserved across all intermediate steps, and only the final output is rounded to 2 decimal places using standard half-up rounding (ties rounded away from zero, e.g., 12.345 -> 12.35 and -161.795 -> -161.80). Each suite includes dedicated test cases where premature intermediate rounding or banker's rounding (round-half-to-even on an even hundredths digit followed by 5 in the thousandths place, such as 3.125 -> 3.13, 156.465 -> 156.47, 6.125 -> 6.13, and 99.525 -> 99.53) produces a 1-cent difference.
+
+d) Enhanced Package Order of Operations (Packaging Multipliers and Local Discount):
+   Per Section 5 of enhanced_package_spec.md, Packaging codes 7 (*1.15) and 8 (*1.30) scale the delivery-multiplied price in Step 3 BEFORE additive service fees are added in Step 4, whereas the Rule 1 local overnight discount (*0.90) is applied in Step 5 to the entire running total AFTER all additive fees.
+
+e) Enhanced Payroll Taxable Bonuses, Pension Cap, Subsidies, and Credits:
+   Per Section 4 and Section 5 of enhanced_payroll_spec.md:
+   - Overtime (> 5.0 hrs -> +$50.00) and Holiday (> 5.0 hrs -> +$75.00) bonuses are added to grossPay in Step 1, meaning all taxes (Federal, Social Security, Medicare, State) and the 10% pension deduction cap (0.10 * grossPay) are calculated on grossPay inclusive of bonuses.
+   - Under Rule 6 (hourly <= $20.00), medical, dental, and vision deductions are subsidized to $0.00, but Rule 4 (medical != 0 requires dental != 0) still applies as an enrollment validation rule (tested in T23), and Rule 7 (+$15.00 wellness credit for Medical 3 + Dental 2 + Vision 2) operates independently of the Rule 6 subsidy (tested in T03).
+
+3. TEST CASE DESIGN TECHNIQUES AND EXPECTED VALUES BY SUITE
+-----------------------------------------------------------
+
+A. BasicPackage_TFD.csv (20 Test Cases)
+  T01 [Equivalence / Precision]: inputs=[1.05, 1, 2, 3, 0, 0, 0, 0, 0, 0] -> expected=3.15
+      Rationale: Spec worked example; Zone 1->2 ($2.50), Priority Overnight (3: 1.2x); verifies no intermediate rounding on 2.625 before multiplying by 1.2
+  T02 [Boundary / Equivalence]: inputs=[0.01, 1, 1, 1, 1, 0, 0, 0, 0, 0] -> expected=3.04
+      Rationale: Lower valid weight boundary (0.01 lb), Same Zone 1->1 ($2.00), Same Day (1: 2.1x), Indirect Signature ($3.00)
+  T03 [Boundary / Equivalence]: inputs=[60.0, 1, 4, 7, 2, 1, 0, 0, 0, 0] -> expected=155.00
+      Rationale: Exact upper weight boundary (60.0 lbs), Zone 1->4 ($3.75), Express Saver (7: 0.6x), Direct Signature ($10) + Residence ($10)
+  T04 [Boundary / Rounding Tie]: inputs=[1.25, 2, 1, 4, 0, 0, 0, 0, 0, 0] -> expected=3.13
+      Rationale: Zone 2->1 symmetry ($2.50), Standard Overnight (4: 1.0x), exact third-decimal tie on even second digit (3.125 -> 3.13 via half-up vs 3.12 half-even)
+  T05 [Equivalence / Surcharge Isolation]: inputs=[4.3, 1, 3, 2, 0, 0, 1, 0, 0, 0] -> expected=39.35
+      Rationale: Zone 1->3 ($3.00), First Overnight (2: 1.5x), isolated Saturday delivery fee ($20.00); verifies multiplier applies before additive surcharge
+  T06 [Equivalence / Surcharge Isolation]: inputs=[7.7, 3, 1, 5, 0, 0, 0, 1, 0, 0] -> expected=35.79
+      Rationale: Zone 3->1 symmetry ($3.00), 2-day AM (5: 0.9x), isolated Hold at Location fee ($15.00)
+  T07 [Equivalence / Surcharge Isolation]: inputs=[11.3, 2, 3, 6, 0, 0, 0, 0, 1, 0] -> expected=49.86
+      Rationale: Zone 2->3 ($2.75), 2-day (6: 0.8x), isolated Fragile handling fee ($25.00)
+  T08 [Equivalence / Surcharge Isolation]: inputs=[8.4, 3, 2, 1, 0, 0, 0, 0, 0, 1] -> expected=98.51
+      Rationale: Zone 3->2 symmetry ($2.75), Same Day (1: 2.1x), isolated Dangerous Goods fee ($50.00)
+  T09 [Combination]: inputs=[15.5, 2, 4, 3, 1, 1, 1, 0, 0, 0] -> expected=93.45
+      Rationale: Zone 2->4 ($3.25), Priority Overnight (3: 1.2x), combined Indirect Signature ($3) + Residence ($10) + Saturday ($20)
+  T10 [Combination]: inputs=[22.6, 4, 2, 2, 2, 0, 0, 1, 1, 0] -> expected=160.18
+      Rationale: Zone 4->2 symmetry ($3.25), First Overnight (2: 1.5x), Direct Signature ($10) + Hold ($15) + Fragile ($25)
+  T11 [Combination]: inputs=[33.7, 3, 4, 5, 0, 1, 0, 0, 0, 1] -> expected=129.76
+      Rationale: Zone 3->4 ($2.30), 2-day AM (5: 0.9x), Residence ($10) + Dangerous Goods ($50)
+  T12 [Combination]: inputs=[19.25, 4, 3, 6, 1, 0, 1, 1, 0, 0] -> expected=73.42
+      Rationale: Zone 4->3 symmetry ($2.30), 2-day (6: 0.8x), Indirect Signature ($3) + Saturday ($20) + Hold ($15)
+  T13 [Combination]: inputs=[45.8, 2, 2, 7, 2, 1, 1, 1, 1, 1] -> expected=184.96
+      Rationale: Same Zone 2->2 ($2.00), Express Saver (7: 0.6x), all 6 additive surcharges active simultaneously (+$130.00)
+  T14 [Equivalence / Combination]: inputs=[13.15, 3, 3, 4, 0, 1, 0, 0, 1, 0] -> expected=61.30
+      Rationale: Same Zone 3->3 ($2.00), Standard Overnight (4: 1.0x), Residence ($10) + Fragile ($25)
+  T15 [Equivalence / Combination]: inputs=[27.45, 4, 4, 2, 2, 0, 1, 0, 0, 1] -> expected=162.35
+      Rationale: Same Zone 4->4 ($2.00), First Overnight (2: 1.5x), Direct Signature ($10) + Saturday ($20) + Dangerous ($50)
+  T16 [Negative / Boundary]: inputs=[0.0, 1, 2, 4, 0, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Weight at exact 0.0 lower bound (0.0 <= 0.0 must be rejected with ERROR)
+  T17 [Negative / Boundary]: inputs=[60.01, 2, 3, 4, 0, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Weight just above 60.0 upper bound (60.01 > 60.0 must be rejected with ERROR)
+  T18 [Negative / Boundary]: inputs=[10.0, 0, 2, 4, 0, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Origin zone below valid range 1..4 (origin = 0 -> ERROR)
+  T19 [Negative / Boundary]: inputs=[10.0, 2, 5, 4, 0, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Destination zone above valid range 1..4 (destination = 5 -> ERROR)
+  T20 [Negative / Boundary]: inputs=[10.0, 1, 3, 8, 0, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Delivery option above valid range 1..7 (deliveryOption = 8 -> ERROR)
+
+B. BasicPayroll_TFD.csv (20 Test Cases)
+  T01 [Equivalence / Precision]: inputs=[17.35, 37.5, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=535.79
+      Rationale: Spec worked example; Tier 1 (10% fed), fractional regular hours (37.5), full intermediate precision
+  T02 [Boundary / Rule]: inputs=[15.0, 40.0, 0.0, 0.0, 0, 0, 0, 0.0, 45.0, 0, 0, 0] -> expected=449.10
+      Rationale: Exact lower hourlySalary boundary ($15.00), 10% tax bracket, uncapped pension contribution ($45.00 < $60.00 cap)
+  T03 [Boundary / Equivalence]: inputs=[20.0, 0.0, 10.0, 0.0, 1, 1, 1, 0.0, 0.0, 0, 0, 0] -> expected=187.05
+      Rationale: Exact upper boundary of 10% federal bracket ($20.00), isolated overtime pay (1.5x), Medical 1 + Dental 1 + Vision 1
+  T04 [Boundary / Equivalence]: inputs=[20.01, 0.0, 0.0, 8.0, 2, 2, 2, 0.0, 0.0, 0, 0, 0] -> expected=128.23
+      Rationale: Exact lower boundary of 22% federal bracket ($20.01), isolated holiday pay (2.0x), Medical 2 + Dental 2 + Vision 2
+  T05 [Rule / Combination]: inputs=[30.0, 35.0, 6.0, 4.0, 0, 0, 0, 25.0, 200.0, 0, 0, 0] -> expected=916.46
+      Rationale: Combined regular, overtime, and holiday hours; pension cap rule triggered ($200.00 requested capped at 10% of $1560.00 = $156.00)
+  T06 [Boundary / Equivalence]: inputs=[40.0, 40.0, 0.0, 0.0, 3, 0, 0, 0.0, 0.0, 1, 1, 1] -> expected=938.10
+      Rationale: Exact upper boundary of 22% federal bracket ($40.00), Medical 3 ($125) + LTD ($14) + STD ($9) + Parking ($39.50)
+  T07 [Boundary / Rule]: inputs=[40.01, 40.0, 5.0, 0.0, 1, 2, 1, 15.5, 190.05, 1, 0, 0] -> expected=805.37
+      Rationale: Exact lower boundary of 35% federal bracket ($40.01), unrounded 10% pension cap boundary (190.0475 vs 190.05), isolated LTD=1
+  T08 [Boundary / Combination]: inputs=[50.0, 40.0, 8.0, 4.0, 3, 2, 2, 50.0, 500.0, 1, 1, 1] -> expected=1161.00
+      Rationale: Exact upper hourlySalary boundary ($50.00, 35% bracket), all benefit plans and flags at maximum, capped pension ($300.00)
+  T09 [Boundary / Rule]: inputs=[25.0, 0.0, 0.0, 0.0, 3, 2, 2, 25.0, 50.0, 1, 1, 1] -> expected=-234.50
+      Rationale: Zero hours boundary across all hour types; verifies negative net pay (-$234.50) is not clamped to zero and pension cap is $0.00
+  T10 [Boundary / Rounding Tie]: inputs=[19.0, 10.0, 0.0, 0.0, 0, 0, 0, 318.26, 0.0, 0, 0, 0] -> expected=-161.80
+      Rationale: Negative third-decimal tie (-161.795 -> -161.80 away from zero, matching spec clarification example)
+  T11 [Boundary / Rounding Tie]: inputs=[19.0, 10.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=156.47
+      Rationale: Positive third-decimal tie on even digit (156.465 -> 156.47 via half-up vs 156.46 via banker's rounding or early Medicare rounding)
+  T12 [Precision / Equivalence]: inputs=[15.05, 37.5, 0.0, 0.0, 0, 1, 2, 0.0, 20.0, 0, 1, 0] -> expected=418.76
+      Rationale: Detects premature rounding of grossSalary (564.375 -> 564.38 shifts net by 1 cent); also exercises STD=1 ($9), Dental 1 ($5), Vision 2 ($12)
+  T13 [Equivalence / Combination]: inputs=[44.2, 36.25, 0.0, 3.5, 2, 0, 1, 10.0, 80.0, 0, 0, 1] -> expected=886.83
+      Rationale: Tier 3 wage ($44.20) with regular + holiday hours, isolated Parking=1 ($39.50), Medical 2 ($75), Vision 1 ($5), uncapped pension
+  T14 [Boundary / Combination]: inputs=[28.5, 32.0, 4.0, 2.0, 0, 2, 0, 12.25, 119.7, 1, 0, 0] -> expected=686.14
+      Rationale: Tier 2 wage ($28.50) with exact 10% pension boundary ($119.70 on $1197.00 gross), Dental 2 ($10), LTD=1 ($14)
+  T15 [Negative / Boundary]: inputs=[14.99, 40.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Hourly salary just below $15.00 minimum boundary (14.99 -> ERROR)
+  T16 [Negative / Boundary]: inputs=[50.01, 40.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Hourly salary just above $50.00 maximum boundary (50.01 -> ERROR)
+  T17 [Negative / Boundary]: inputs=[25.0, -0.01, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Negative regularHours (-0.01 -> ERROR)
+  T18 [Negative / Boundary]: inputs=[25.0, 40.0, -1.0, 0.0, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Negative overtimeHours (-1.0 -> ERROR)
+  T19 [Negative / Boundary]: inputs=[25.0, 40.0, 0.0, 0.0, 4, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Medical plan code outside 0..3 domain (medicalPlan = 4 -> ERROR)
+  T20 [Negative / Boundary]: inputs=[25.0, 40.0, 0.0, 0.0, 0, 0, 0, 0.0, -0.01, 0, 0, 0] -> expected=ERROR
+      Rationale: Negative pension contribution (-0.01 -> ERROR)
+
+C. EnhancedPackage_TFD.csv (35 Test Cases)
+  T01 [Rule 1 / Precision]: inputs=[1.05, 1, 1, 3, 7, 0, 1, 0, 0, 0, 0] -> expected=11.61
+      Rationale: Spec worked example; Local 1->1 Priority Overnight (1.2x), Pkg 7 (*1.15), Residence (+$10), Rule 1 10% discount (*0.90 -> 11.61)
+  T02 [Boundary / Rule 4]: inputs=[2.0, 1, 2, 4, 1, 1, 0, 0, 0, 0, 0] -> expected=8.00
+      Rationale: Exact max weight for Packaging 1 Envelope (2.0 lbs), Zone 1->2 ($2.50), Standard Overnight (1.0x), Business with Indirect Signature (Rule 4 valid)
+  T03 [Boundary / Equivalence]: inputs=[10.0, 2, 1, 5, 2, 2, 0, 1, 0, 0, 0] -> expected=52.50
+      Rationale: Exact max weight for Packaging 2 Small Box (10.0 lbs), Zone 2->1 ($2.50), 2-day AM (0.9x), Direct Signature ($10) + Saturday ($20)
+  T04 [Boundary / Equivalence]: inputs=[25.0, 1, 3, 6, 3, 1, 0, 0, 1, 0, 0] -> expected=85.00
+      Rationale: Exact max weight for Packaging 3 Medium Box (25.0 lbs, +$7), Zone 1->3 ($3.00), 2-day (0.8x), Indirect Signature ($3) + Hold ($15)
+  T05 [Boundary / Equivalence]: inputs=[40.0, 3, 1, 2, 4, 1, 0, 0, 0, 1, 0] -> expected=226.00
+      Rationale: Exact max weight for Packaging 4 Large Box (40.0 lbs, +$18), Zone 3->1 ($3.00), First Overnight (1.5x), Fragile ($25) with Indirect Signature ($3, no Rule 6 surcharge)
+  T06 [Boundary / Rule 2 Baseline]: inputs=[10.0, 2, 3, 1, 5, 1, 0, 0, 0, 0, 0] -> expected=65.75
+      Rationale: Exact max weight for Packaging 5 Tube (10.0 lbs, +$5), Zone 2->3 ($2.75), Same Day (1) without fragile (standard 2.1x multiplier)
+  T07 [Rule 2 & Rule 6]: inputs=[12.0, 3, 2, 1, 3, 2, 0, 0, 0, 1, 0] -> expected=162.75
+      Rationale: Zone 3->2 ($2.75), Fragile + Same Day triggers 2.75x multiplier (Rule 2), Fragile + Direct Signature triggers +$30 extra fee (Rule 6)
+  T08 [Rule 1 & Rule 2]: inputs=[8.0, 2, 2, 1, 6, 1, 0, 0, 0, 1, 0] -> expected=64.80
+      Rationale: Local Same Zone 2->2 ($2.00) with Same Day + Fragile (2.75x, Rule 2), Packaging 6 (+$0), and 10% local express discount (Rule 1)
+  T09 [Rule 1 / Pkg 8 Order]: inputs=[15.0, 3, 3, 2, 8, 2, 1, 1, 0, 0, 0] -> expected=88.65
+      Rationale: Local Same Zone 3->3 ($2.00), First Overnight (1.5x), Packaging 8 (*1.30 applied before surcharges), Residence + Saturday + Direct Sig, then *0.90 (Rule 1)
+  T10 [Rule 1 Boundary & Rule 9]: inputs=[20.0, 4, 4, 4, 6, 0, 1, 1, 0, 0, 0] -> expected=60.00
+      Rationale: Local 4->4 with Standard Overnight (opt=4 -> no Rule 1 discount); Residence in dest Zone 4 with Saturday delivery triggers +$10 reduced Saturday fee (Rule 9)
+  T11 [Rule 9 Counter-Check]: inputs=[30.0, 1, 4, 3, 4, 1, 0, 1, 0, 0, 0] -> expected=176.00
+      Rationale: Zone 1->4 ($3.75) Business (loc=0) with Saturday=1 in dest Zone 4 charges full $20 Saturday fee (verifies Rule 9 requires Residence loc=1)
+  T12 [Rule 9 Counter-Check]: inputs=[6.5, 4, 3, 5, 2, 0, 1, 1, 0, 0, 0] -> expected=43.46
+      Rationale: Zone 4->3 ($2.30) Residence with Saturday=1 where origin=4 but destination=3 charges full $20 Saturday fee (verifies Rule 9 checks destination==4)
+  T13 [Rule 3]: inputs=[18.4, 2, 4, 7, 7, 0, 1, 0, 1, 1, 0] -> expected=76.26
+      Rationale: Zone 2->4 ($3.25), Express Saver (7: 0.6x) with hold=1 waives the $15 hold fee ($0.00, Rule 3); also tests Packaging 7 (*1.15) with Fragile
+  T14 [Rule 5 Boundary]: inputs=[50.0, 4, 2, 6, 6, 0, 1, 0, 1, 0, 0] -> expected=155.00
+      Rationale: Exact 50.0 lb boundary with signature=0 at Residence is accepted (Rule 5 only rejects weight > 50.0); Zone 4->2, 2-day (0.8x) with $15 hold fee
+  T15 [Rule 5 Valid]: inputs=[55.0, 3, 4, 4, 7, 1, 1, 0, 0, 0, 0] -> expected=158.48
+      Rationale: Heavy parcel (55.0 lbs > 50.0) accepted with Indirect Signature (sig=1, Rule 5); Zone 3->4 ($2.30), Packaging 7 (*1.15)
+  T16 [Boundary / Rule 3 & 5]: inputs=[60.0, 4, 1, 7, 8, 2, 0, 0, 1, 0, 0] -> expected=185.50
+      Rationale: Exact maximum system and Packaging 8 weight boundary (60.0 lbs) with Direct Signature (sig=2), Zone 4->1 ($3.75), Express Saver hold fee waived
+  T17 [Rule 8 Boundary & Rule 10]: inputs=[14.0, 1, 4, 4, 6, 0, 1, 0, 0, 0, 1] -> expected=152.50
+      Rationale: Dangerous goods with Standard Overnight (opt=4 boundary is permitted by Rule 8) and signature=0 triggers +$40 unsigned dangerous surcharge (Rule 10)
+  T18 [Rule 8 & Rule 10 Counter-Check]: inputs=[8.0, 2, 3, 2, 5, 2, 0, 1, 1, 0, 1] -> expected=133.00
+      Rationale: Dangerous goods with Direct Signature (sig=2) incurs $50 dangerous fee without Rule 10 +$40 surcharge; First Overnight (opt=2), Tube (+$5)
+  T19 [Combination (Rules 1, 9, 10)]: inputs=[12.5, 4, 4, 3, 8, 0, 1, 1, 0, 0, 1] -> expected=134.10
+      Rationale: Combined Local 4->4 Priority Overnight (Rule 1 *0.90), Packaging 8 (*1.30), Zone 4 Residential Saturday (+$10, Rule 9), Unsigned Dangerous (+$90, Rule 10)
+  T20 [Rounding Tie]: inputs=[1.25, 1, 2, 4, 1, 1, 0, 0, 0, 0, 0] -> expected=6.13
+      Rationale: Exact third-decimal tie on even second digit (6.125 -> 6.13 via half-up vs 6.12 via half-even)
+  T21 [Negative / Packaging Boundary]: inputs=[2.01, 1, 2, 4, 1, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Packaging 1 (Envelope) weight limit exceeded at 2.01 lbs (> 2.0 -> ERROR)
+  T22 [Negative / Packaging Boundary]: inputs=[10.01, 1, 2, 4, 2, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Packaging 2 (Small Box) weight limit exceeded at 10.01 lbs (> 10.0 -> ERROR)
+  T23 [Negative / Packaging Boundary]: inputs=[25.01, 1, 2, 4, 3, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Packaging 3 (Medium Box) weight limit exceeded at 25.01 lbs (> 25.0 -> ERROR)
+  T24 [Negative / Packaging Boundary]: inputs=[40.01, 1, 2, 4, 4, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Packaging 4 (Large Box) weight limit exceeded at 40.01 lbs (> 40.0 -> ERROR)
+  T25 [Negative / Packaging Boundary]: inputs=[10.01, 1, 2, 4, 5, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Packaging 5 (Tube) weight limit exceeded at 10.01 lbs (> 10.0 -> ERROR)
+  T26 [Negative / Rule 4]: inputs=[5.0, 1, 2, 4, 2, 0, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 4 violation: Business delivery (locationType=0) with no signature (signature=0 -> ERROR)
+  T27 [Negative / Rule 5 Boundary]: inputs=[50.01, 1, 2, 4, 6, 0, 1, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 5 violation at exact boundary: weight=50.01 lbs (> 50.0) to Residence with signature=0 (-> ERROR)
+  T28 [Negative / Rule 7]: inputs=[10.0, 1, 2, 2, 3, 1, 0, 0, 0, 1, 1] -> expected=ERROR
+      Rationale: Rule 7 violation: Fragile (1) and Dangerous (1) combined on otherwise valid overnight shipment (-> ERROR)
+  T29 [Negative / Rule 8 Boundary]: inputs=[10.0, 1, 2, 5, 3, 1, 0, 0, 0, 0, 1] -> expected=ERROR
+      Rationale: Rule 8 violation at boundary: Dangerous goods (1) with deliveryOption=5 (2-day AM -> ERROR)
+  T30 [Negative / Rule 8]: inputs=[10.0, 1, 2, 6, 3, 1, 0, 0, 0, 0, 1] -> expected=ERROR
+      Rationale: Rule 8 violation: Dangerous goods (1) with deliveryOption=6 (2-day -> ERROR)
+  T31 [Negative / Rule 8]: inputs=[10.0, 1, 2, 7, 3, 1, 0, 0, 0, 0, 1] -> expected=ERROR
+      Rationale: Rule 8 violation: Dangerous goods (1) with deliveryOption=7 (Express Saver -> ERROR)
+  T32 [Negative / Domain Boundary]: inputs=[0.0, 1, 2, 4, 1, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Parcel weight at exact 0.0 lower bound (0.0 <= 0.0 -> ERROR)
+  T33 [Negative / Domain Boundary]: inputs=[60.01, 1, 2, 4, 8, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Parcel weight just above 60.0 lb maximum (60.01 > 60.0 -> ERROR)
+  T34 [Negative / Domain Boundary]: inputs=[5.0, 1, 2, 4, 9, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Packaging code above valid range 1..8 (packaging=9 -> ERROR)
+  T35 [Negative / Domain Boundary]: inputs=[5.0, 5, 2, 4, 2, 1, 0, 0, 0, 0, 0] -> expected=ERROR
+      Rationale: Origin zone code above valid range 1..4 (origin=5 -> ERROR)
+
+D. EnhancedPayroll_TFD.csv (35 Test Cases)
+  T01 [Equivalence / Precision]: inputs=[24.35, 37.5, 0.0, 0.0, 1, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=605.86
+      Rationale: Spec worked example; State 1 (TN 4% tier), Federal 22% tier, fractional regular hours (37.5 -> 605.86)
+  T02 [Boundary / Rules 2, 3, 6, 8]: inputs=[15.0, 40.0, 5.0, 5.0, 1, 1, 1, 1, 9.99, 30.0, 0, 0, 0] -> expected=670.28
+      Rationale: Exact min hourly ($15.00, TN 0%, Fed 10%), exact OT=5.0 & Hol=5.0 boundaries (no bonuses), Rule 6 health subsidy ($0 ded), United Way $9.99 boundary (no Rule 8 credit)
+  T03 [Boundary / Rules 1, 2, 6, 7, 8]: inputs=[20.0, 40.0, 10.0, 0.0, 1, 3, 2, 2, 10.0, 50.0, 0, 0, 0] -> expected=903.53
+      Rationale: Exact $20.00 boundary (TN 0%, Fed 10%, Rule 6 subsidy active), exact OT=10.0 limit (Rule 1 valid + Rule 2 $50 bonus), Rule 7 +$15 credit with $0 subsidized deductions, exact United Way $10.00 boundary (+$1.50 credit)
+  T04 [Boundary / Rules 1, 2, 3, 6]: inputs=[20.01, 40.0, 12.0, 6.0, 1, 1, 1, 1, 0.0, 100.0, 0, 0, 0] -> expected=852.30
+      Rationale: Exact $20.01 boundary (TN 4%, Fed 22%, Rule 6 subsidy off so $60 deducted, Rule 1 OT cap off so OT=12.0 valid), both OT (+$50) and Holiday (+$75) bonuses active
+  T05 [Boundary / Rules 7, 8, 10]: inputs=[35.0, 40.0, 0.0, 0.0, 1, 3, 2, 2, 20.0, 200.0, 1, 1, 1] -> expected=582.40
+      Rationale: Exact $35.00 upper boundary for TN 4% tier; unsubsidized Rule 7 ($147 ded + $15 credit), Rule 10 dual disability ($23 ded + $5 credit), Rule 8 credit (+$3), pension capped at $140
+  T06 [Boundary / Rules 2, 3, 9, 10]: inputs=[35.01, 30.0, 5.01, 5.01, 1, 2, 1, 0, 0.0, 50.0, 0, 1, 0] -> expected=976.57
+      Rationale: Exact $35.01 lower boundary for TN 8% tier; exact 5.01 hr boundaries for OT (+$50) and Holiday (+$75) bonuses; STD=1 alone ($9 ded, $0 credit)
+  T07 [Rule 6 & 8 / State 2]: inputs=[18.5, 36.0, 4.0, 2.0, 2, 2, 2, 1, 40.0, 100.0, 0, 0, 1] -> expected=516.67
+      Rationale: Arkansas 3% tier ($18.50) with Rule 6 health subsidy ($0 ded for Med 2, Den 2, Vis 1), Parking ($39.50), United Way $40 (+$6 credit), capped pension
+  T08 [Boundary / Rule 4 & 10]: inputs=[30.0, 40.0, 2.0, 0.0, 2, 0, 2, 2, 15.0, 80.0, 1, 1, 0] -> expected=736.07
+      Rationale: Exact $30.00 upper boundary for AR 3% tier; Medical=0 with Dental=2 & Vision=2 (valid under Rule 4), Dual Disability (+$5 credit)
+  T09 [Boundary / Rule 7 Counter-Check]: inputs=[30.01, 40.0, 0.0, 0.0, 2, 3, 2, 1, 0.0, 0.0, 0, 0, 1] -> expected=592.96
+      Rationale: Exact $30.01 lower boundary for AR 6% tier; Medical 3 + Dental 2 + Vision 1 verifies no Rule 7 wellness credit when Vision != 2
+  T10 [Boundary / Rule 5]: inputs=[40.0, 40.0, 6.0, 0.0, 2, 1, 1, 0, 0.0, 150.0, 0, 0, 0] -> expected=1088.44
+      Rationale: Exact $40.00 boundary (Fed 22%, AR 6%) with Medical 1 + Dental 1 accepted (Rule 5 mandate only applies >= $40.01); OT=6.0 (+$50 bonus)
+  T11 [Boundary / Rule 3 & 5]: inputs=[40.01, 40.0, 0.0, 7.0, 2, 2, 1, 2, 30.0, 300.0, 1, 1, 1] -> expected=749.40
+      Rationale: Exact $40.01 boundary (Fed 35%, AR 6%) with Medical 2 satisfying Rule 5; Holiday=7.0 (+$75 bonus), capped pension, all credits
+  T12 [Boundary / Rule 7 Counter-Check]: inputs=[25.0, 40.0, 0.0, 0.0, 3, 2, 2, 2, 0.0, 50.0, 0, 1, 0] -> expected=527.50
+      Rationale: Exact $25.00 upper boundary for MS 2% tier; Medical 2 + Dental 2 + Vision 2 verifies no Rule 7 wellness credit when Medical != 3
+  T13 [Boundary / State 3]: inputs=[25.01, 38.0, 8.0, 2.0, 3, 1, 2, 0, 50.0, 120.0, 0, 0, 1] -> expected=681.26
+      Rationale: Exact $25.01 lower boundary for MS 3% tier; OT bonus (+$50), Medical 1 + Dental 2, United Way $50 (+$7.50 credit)
+  T14 [Boundary / State 3 & Rule 5]: inputs=[40.0, 40.0, 0.0, 0.0, 3, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=1077.60
+      Rationale: Exact $40.00 upper boundary for MS 3% and Fed 22% tiers with Medical=0 (accepted since hourly < 40.01)
+  T15 [Boundary / State 3 & Rule 7]: inputs=[40.01, 35.0, 4.0, 2.0, 3, 3, 2, 2, 12.0, 100.0, 0, 0, 0] -> expected=700.34
+      Rationale: Exact $40.01 lower boundary for MS 5% and Fed 35% tiers; Medical 3 + Dental 2 + Vision 2 (+$15 credit), uncapped pension
+  T16 [Boundary / Full Combination]: inputs=[50.0, 40.0, 6.0, 6.0, 3, 3, 2, 2, 100.0, 500.0, 1, 1, 1] -> expected=1070.11
+      Rationale: Exact $50.00 max boundary (MS 5%, Fed 35%); both OT and Holiday bonuses (+$125 included in 10% pension cap = $317.50) and all 3 net credits
+  T17 [Boundary / Negative Net Pay]: inputs=[45.0, 0.0, 0.0, 0.0, 1, 2, 1, 1, 20.0, 50.0, 1, 1, 1] -> expected=-159.50
+      Rationale: Zero hours worked in high-earner tier ($45.00, Med 2 + Den 1) yielding negative net pay (-$159.50) mitigated by Rule 8 (+$3) & Rule 10 (+$5) credits
+  T18 [Rule 6 & 7 Interaction]: inputs=[19.25, 35.5, 3.5, 1.5, 3, 3, 1, 2, 5.0, 40.0, 0, 0, 0] -> expected=631.70
+      Rationale: Subsidized low-wage employee ($19.25, MS 2%) with Med 3 + Den 1 + Vis 2 ($0 deducted via Rule 6, no Rule 7 credit since Dental != 2)
+  T19 [Rounding Tie]: inputs=[25.0, 6.0, 0.0, 0.0, 1, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=99.53
+      Rationale: Exact third-decimal tie on even second digit (99.525 -> 99.53 via half-up vs 99.52 via banker's rounding)
+  T20 [Negative / Rule 1 Boundary]: inputs=[20.0, 40.0, 10.01, 0.0, 1, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 1 violation at exact upper low-wage boundary: hourly=$20.00 with overtimeHours=10.01 (> 10.0 -> ERROR)
+  T21 [Negative / Rule 1 Boundary]: inputs=[15.0, 40.0, 10.5, 0.0, 2, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 1 violation at exact lower low-wage boundary: hourly=$15.00 with overtimeHours=10.5 (> 10.0 -> ERROR)
+  T22 [Negative / Rule 4]: inputs=[25.0, 40.0, 0.0, 0.0, 1, 1, 0, 1, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 4 violation: Medical Plan 1 selected with Dental Plan 0 (-> ERROR)
+  T23 [Negative / Rule 4 & 6]: inputs=[18.0, 40.0, 0.0, 0.0, 1, 3, 0, 2, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 4 violation under Rule 6 subsidy: Medical Plan 3 with Dental Plan 0 at $18.00/hr must still be rejected (-> ERROR)
+  T24 [Negative / Rule 5 Boundary]: inputs=[40.01, 40.0, 0.0, 0.0, 1, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 5 violation at exact $40.01 boundary: high-earner enrolled in Medical Plan 0 (-> ERROR)
+  T25 [Negative / Rule 5 Boundary]: inputs=[40.01, 40.0, 0.0, 0.0, 2, 1, 1, 1, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Rule 5 violation at exact $40.01 boundary: high-earner enrolled in Medical Plan 1 with Dental Plan 1 (-> ERROR)
+  T26 [Negative / Rule 9]: inputs=[28.0, 40.0, 0.0, 0.0, 3, 0, 0, 0, 0.0, 0.0, 1, 0, 0] -> expected=ERROR
+      Rationale: Rule 9 violation: Long-Term Disability (ltd=1) without Short-Term Disability (std=0 -> ERROR)
+  T27 [Negative / Domain Boundary]: inputs=[14.99, 40.0, 0.0, 0.0, 1, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Hourly rate just below $15.00 minimum (14.99 -> ERROR)
+  T28 [Negative / Domain Boundary]: inputs=[50.01, 40.0, 0.0, 0.0, 1, 3, 2, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Hourly rate just above $50.00 maximum (50.01 with Med 3 & Den 2 -> ERROR)
+  T29 [Negative / Domain Boundary]: inputs=[25.0, 40.0, 0.0, 0.0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: State code below valid range 1..3 (state=0 -> ERROR)
+  T30 [Negative / Domain Boundary]: inputs=[25.0, 40.0, 0.0, 0.0, 4, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: State code above valid range 1..3 (state=4 -> ERROR)
+  T31 [Negative / Domain Boundary]: inputs=[25.0, -0.5, 0.0, 0.0, 1, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Negative regularHours (-0.5 -> ERROR)
+  T32 [Negative / Domain Boundary]: inputs=[25.0, 40.0, 0.0, -1.0, 1, 0, 0, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Negative holidayHours (-1.0 -> ERROR)
+  T33 [Negative / Domain Boundary]: inputs=[25.0, 40.0, 0.0, 0.0, 1, 0, 0, 0, -5.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Negative United Way contribution (-5.00 -> ERROR)
+  T34 [Negative / Domain Boundary]: inputs=[25.0, 40.0, 0.0, 0.0, 1, 1, 3, 0, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Dental plan code above valid range 0..2 (dental=3 -> ERROR)
+  T35 [Negative / Domain Boundary]: inputs=[25.0, 40.0, 0.0, 0.0, 1, 0, 0, 3, 0.0, 0.0, 0, 0, 0] -> expected=ERROR
+      Rationale: Vision plan code above valid range 0..2 (vision=3 -> ERROR)

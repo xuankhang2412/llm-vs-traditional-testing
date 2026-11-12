@@ -1,0 +1,21 @@
+Defect,Type,TestInput,ExpectedNONE,ActualDk,Detected
+D1,arithmetic,"hourly=25.0 reg=40.0 ot=4.0 hol=0.0 state=2 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",774.53,788.00,YES
+D2,conditional,"hourly=25.0 reg=40.0 ot=0.0 hol=8.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",978.66,928.84,YES
+D3,arithmetic,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",663.50,633.50,YES
+D4,logic,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=2 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",673.50,703.50,YES
+D5,boundary,"hourly=40.00 reg=40.0 ot=0.0 hol=0.0 state=1 med=1 den=1 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",ACCEPTED,REJECTED,YES
+D6,conditional,"hourly=18.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=3 den=2 vis=2 uw=0 pen=0 ltd=0 std=0 park=0",607.92,460.92,YES
+D7,arithmetic,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=0 den=2 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",653.50,651.50,YES
+D8,boundary,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=15.0 pen=0 ltd=0 std=0 park=0",650.75,648.50,YES
+D9,conditional,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=1 std=0 park=0",REJECTED,ACCEPTED (649.50),YES
+D10,logic,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=1 std=1 park=0",645.50,635.50,YES
+D11,boundary,"hourly=25.0 reg=40.0 ot=5.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",787.91 (gross 1187.50),821.08 (gross 1237.50),YES
+D12,boundary,"hourly=18.0 reg=40.0 ot=11.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",REJECTED,ACCEPTED (878.67),YES
+D13,arithmetic,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",663.50,663.00,YES
+D14,arithmetic,"hourly=40.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=2 den=1 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",917.60,949.60,YES
+D15,conditional,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=1 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",REJECTED,ACCEPTED (613.50),YES
+D16,conditional,"hourly=30.0 reg=40.0 ot=0.0 hol=0.0 state=2 med=3 den=2 vis=2 uw=0 pen=0 ltd=0 std=0 park=0",676.20,661.20,YES
+D17,boundary,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=3 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",683.50,673.50,YES
+D18,logic,"hourly=25.0 reg=30.0 ot=5.0 hol=3.0 state=2 med=0 den=0 vis=0 uw=0 pen=200.0 ltd=0 std=0 park=0",623.68,657.43,YES
+D19,conditional,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=1 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=1 park=0",654.50,659.50,YES
+D20,logic,"hourly=25.0 reg=40.0 ot=0.0 hol=0.0 state=2 med=0 den=0 vis=0 uw=0 pen=0 ltd=0 std=0 park=0",673.50,683.50,YES

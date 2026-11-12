@@ -1,0 +1,22 @@
+Defect,Type,TestInput,ExpectedNONE,ActualDk,Detected
+D1,arithmetic,"weight=10.0 origin=3 dest=4 deliv=4 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",26.00,28.00,YES
+D2,arithmetic,"weight=10.0 origin=1 dest=2 deliv=3 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",33.00,40.50,YES
+D3,conditional,"weight=10.0 origin=2 dest=2 deliv=1 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",40.50,45.00,YES
+D4,boundary,"weight=10.0 origin=1 dest=2 deliv=4 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",ACCEPTED,REJECTED,YES
+D5,arithmetic,"weight=5.0 origin=1 dest=2 deliv=4 pkg=6 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",15.50,17.50,YES
+D6,conditional,"weight=10.0 origin=1 dest=2 deliv=4 pkg=2 sig=2 loc=0 sat=0 hold=0 frag=0 dang=0",ACCEPTED,REJECTED,YES
+D7,conditional,"weight=5.0 origin=1 dest=2 deliv=4 pkg=2 sig=2 loc=0 sat=0 hold=0 frag=1 dang=0",77.50,47.50,YES
+D8,logic,"weight=10.0 origin=1 dest=2 deliv=4 pkg=2 sig=1 loc=0 sat=0 hold=1 frag=0 dang=0",43.00,28.00,YES
+D9,conditional,"weight=10.0 origin=1 dest=2 deliv=4 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=1 dang=1",REJECTED,ACCEPTED (103.00),YES
+D10,conditional,"weight=20.0 origin=1 dest=2 deliv=4 pkg=3 sig=0 loc=1 sat=0 hold=0 frag=0 dang=1",157.00,117.00,YES
+D11,boundary,"weight=55.0 origin=1 dest=2 deliv=4 pkg=8 sig=0 loc=1 sat=0 hold=0 frag=0 dang=0",REJECTED,ACCEPTED (188.75),YES
+D12,boundary,"weight=2.0 origin=1 dest=1 deliv=4 pkg=1 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",ACCEPTED,REJECTED,YES
+D13,arithmetic,"weight=20.0 origin=1 dest=3 deliv=4 pkg=7 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",72.00,78.00,YES
+D14,boundary,"weight=25.0 origin=1 dest=2 deliv=4 pkg=3 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",ACCEPTED,REJECTED,YES
+D15,conditional,"weight=10.0 origin=1 dest=3 deliv=4 pkg=2 sig=1 loc=1 sat=1 hold=0 frag=0 dang=0",63.00,53.00,YES
+D16,arithmetic,"weight=10.0 origin=2 dest=2 deliv=2 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",29.70,31.35,YES
+D17,conditional,"weight=8.0 origin=2 dest=3 deliv=7 pkg=2 sig=1 loc=0 sat=0 hold=1 frag=0 dang=0",16.20,31.20,YES
+D18,conditional,"weight=10.0 origin=1 dest=2 deliv=5 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=0 dang=1",REJECTED,ACCEPTED (75.50),YES
+D19,logic,"weight=10.0 origin=4 dest=2 deliv=4 pkg=2 sig=1 loc=0 sat=0 hold=0 frag=0 dang=0",35.50,23.00,YES
+D20,logic,"weight=10.0 origin=1 dest=2 deliv=4 pkg=2 sig=1 loc=1 sat=1 hold=0 frag=0 dang=0",58.00,48.00,YES
+

@@ -1,0 +1,28 @@
+timestamp,app_level,method,condition,rep,model_name,model_version,tool,minutes,input_tokens,output_tokens,notes
+2026-11-04 11:25,BasicPackage,LLM,C1,1,Gemini 3.1 Pro,High,Gemini web app,0.55,,,
+2026-11-04 11:28,BasicPackage,LLM,C2,1,Gemini 3.1 Pro,High,Gemini web app,0.46,,,
+2026-11-04 11:29,BasicPackage,LLM,C3,1,Gemini 3.1 Pro,High,Gemini web app,0.56,,,
+2026-11-04 11:30,BasicPackage,LLM,C4,1,Gemini 3.1 Pro,High,Gemini web app,0.55,,,
+2026-11-04 11:32,BasicPackage,LLM,C5,1,Gemini 3.1 Pro,High,Gemini web app,0.43,,,
+2026-11-04 11:33,BasicPackage,LLM,C6,1,Gemini 3.1 Pro,High,Gemini web app,0.59,,,
+
+2026-11-04 13:11,BasicPayroll,LLM,C1,1,Gemini 3.1 Pro,High,Gemini web app,0.90,,,
+2026-11-04 13:13,BasicPayroll,LLM,C2,1,Gemini 3.1 Pro,High,Gemini web app,0.69,,,
+2026-11-04 13:15,BasicPayroll,LLM,C3,1,Gemini 3.1 Pro,High,Gemini web app,0.62,,,
+2026-11-04 13:15,BasicPayroll,LLM,C4,1,Gemini 3.1 Pro,High,Gemini web app,0.52,,,
+2026-11-04 13:16,BasicPayroll,LLM,C5,1,Gemini 3.1 Pro,High,Gemini web app,0.44,,,
+2026-11-04 13:17,BasicPayroll,LLM,C6,1,Gemini 3.1 Pro,High,Gemini web app,0.61,,,
+
+2026-11-04 13:26,EnhancedPayroll,LLM,C1,1,Gemini 3.1 Pro,High,Gemini web app,1.05,,,
+2026-11-04 13:27,EnhancedPayroll,LLM,C2,1,Gemini 3.1 Pro,High,Gemini web app,1.28,,,
+2026-11-04 13:29,EnhancedPayroll,LLM,C3,1,Gemini 3.1 Pro,High,Gemini web app,1.50,,,
+2026-11-04 13:31,EnhancedPayroll,LLM,C4,1,Gemini 3.1 Pro,High,Gemini web app,0.98,,,
+2026-11-04 13:32,EnhancedPayroll,LLM,C5,1,Gemini 3.1 Pro,High,Gemini web app,1.11,,,
+2026-11-04 13:34,EnhancedPayroll,LLM,C6,1,Gemini 3.1 Pro,High,Gemini web app,1.1,,,
+
+2026-11-04 13:43,EnhancedPackage,LLM,C1,1,Gemini 3.1 Pro,High,Gemini web app,0.86,,,
+2026-11-04 13:44,EnhancedPackage,LLM,C2,1,Gemini 3.1 Pro,High,Gemini web app,0.78,,,
+2026-11-04 13:45,EnhancedPackage,LLM,C3,1,Gemini 3.1 Pro,High,Gemini web app,1.27,,,
+2026-11-04 13:47,EnhancedPackage,LLM,C4,1,Gemini 3.1 Pro,High,Gemini web app,0.81,,,
+2026-11-04 13:48,EnhancedPackage,LLM,C5,1,Gemini 3.1 Pro,High,Gemini web app,1.06,,,
+2026-11-04 13:50,EnhancedPackage,LLM,C6,1,Gemini 3.1 Pro,High,Gemini web app,0.97,,,

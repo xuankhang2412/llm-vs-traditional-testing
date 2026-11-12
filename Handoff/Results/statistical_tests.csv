@@ -1,0 +1,8 @@
+scope,test_type,method_a,method_b,n_defects,b_discordant,c_discordant,p_value_raw,p_value_holm,significance_alpha_0_05,odds_ratio,risk_difference,cohens_g,power_warning
+Pooled_All_Apps,Cochran_Q,TFD_vs_PICT_vs_BestLLM,df=2,60,-,-,0.000018,0.000018,YES,Q=21.8750,-,-,WARNING: n=60 provides low statistical power (effect size must be large)
+Pooled_All_Apps,Cochran_Q,TFD_vs_PICT_vs_LLMUnion,df=2,60,-,-,0.000002,0.000002,YES,Q=26.3750,-,-,WARNING: n=60 provides low statistical power
+Pooled_All_Apps,Exact_McNemar,TFD,PICT_plain,60,15,0,0.000061,0.000305,YES,INF,0.2500,0.5000,WARNING: n=60 low power; do not interpret non-significance as equivalence
+Pooled_All_Apps,Exact_McNemar,LLM_Union,PICT_plain,60,15,1,0.000519,0.002075,YES,15.0000,0.2333,0.4375,WARNING: n=60 low power; do not interpret non-significance as equivalence
+Pooled_All_Apps,Exact_McNemar,Best_LLM,PICT_plain,60,11,1,0.006348,0.019043,YES,11.0000,0.1667,0.4167,WARNING: n=60 low power; do not interpret non-significance as equivalence
+Pooled_All_Apps,Exact_McNemar,TFD,Best_LLM,60,5,0,0.062500,0.125000,NO,INF,0.0833,0.5000,WARNING: n=60 low power; do not interpret non-significance as equivalence
+Pooled_All_Apps,Exact_McNemar,TFD,LLM_Union,60,1,0,1.000000,1.000000,NO,INF,0.0167,0.5000,WARNING: n=60 low power; do not interpret non-significance as equivalence

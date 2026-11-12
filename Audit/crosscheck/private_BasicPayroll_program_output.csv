@@ -1,0 +1,7 @@
+hourlySalary,regularHours,overtimeHours,holidayHours,medicalPlan,dentalPlan,visionPlan,unitedWay,pension,longTermDisability,shortTermDisability,parking,expected
+18.00,40.0,0.0,0.0,0,0,0,0.0,0.0,0,0,0,592.92
+25.00,40.0,10.0,0.0,1,1,1,10.0,100.0,0,0,0,797.31
+45.00,40.0,5.0,8.0,3,2,2,25.0,300.0,1,1,1,1118.53
+15.00,35.0,0.0,0.0,0,0,0,0.0,100.0,0,1,0,370.84
+20.00,40.0,8.0,0.0,2,1,0,5.0,50.0,1,0,1,667.94
+40.00,40.0,0.0,4.0,1,2,1,15.0,0.0,0,1,0,1261.72

@@ -1,0 +1,13 @@
+hourlySalary: 17.50, 30.00, 45.00
+regularHours: 40.0
+overtimeHours: 0.0, 5.0
+holidayHours: 0.0, 8.0
+medicalPlan: 0, 1, 2, 3
+dentalPlan: 0, 1, 2
+visionPlan: 0, 1, 2
+unitedWay: 0.0, 15.0
+pension: 0.0, 50.0
+longTermDisability: 0, 1
+shortTermDisability: 0, 1
+parking: 0, 1
+

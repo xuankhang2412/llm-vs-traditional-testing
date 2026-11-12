@@ -1,0 +1,102 @@
+Please read the following specification carefully:
+
+# Basic Package Shipping Specification
+Version 1.1.1
+
+## 1. Overview
+The Basic Package Shipping system calculates shipping costs for domestic parcel deliveries based on parcel weight, origin and destination zones, service speed options, and optional value-added surcharges.
+
+## 2. Input Parameters
+
+| Field Name | Type | Valid Domain | Description |
+|---|---|---|---|
+| `weight` | Floating-point | `0.0 < weight <= 60.0` | Parcel weight in pounds (lbs) |
+| `origin` | Integer | `1` to `4` | Origin domestic zone |
+| `destination` | Integer | `1` to `4` | Destination domestic zone |
+| `deliveryOption` | Integer | `1` to `7` | Service delivery speed code |
+| `signatureOption` | Integer | `0` to `2` | Signature requirement code |
+| `deliveryLocationType` | Integer | `0` or `1` | Delivery destination location type |
+| `saturdayDelivery` | Integer | `0` or `1` | Saturday delivery service flag |
+| `holdAtLocation` | Integer | `0` or `1` | Hold at courier facility flag |
+| `fragile` | Integer | `0` or `1` | Fragile package handling flag |
+| `dangerous` | Integer | `0` or `1` | Hazardous / dangerous goods flag |
+
+Any input values outside the specified ranges must result in an error rejection (`ERROR`).
+
+## 3. Code Tables & Rate Structures
+
+### 3.1 Base Rate Table (per pound, symmetric)
+Shipping rates depend on origin and destination zone pairs. Rates are symmetric between zones (rate from zone A to B equals the rate from B to A):
+
+| Zone Pair | Rate per Pound ($/lb) |
+|---|---|
+| Same Zone (1-1, 2-2, 3-3, 4-4) | $2.00 |
+| Zones 1 and 2 | $2.50 |
+| Zones 1 and 3 | $3.00 |
+| Zones 1 and 4 | $3.75 |
+| Zones 2 and 3 | $2.75 |
+| Zones 2 and 4 | $3.25 |
+| Zones 3 and 4 | $2.30 |
+
+### 3.2 Delivery Speed Multipliers
+
+| Code | Delivery Option Name | Multiplier |
+|---|---|---|
+| `1` | Same Day | 2.1 |
+| `2` | First Overnight | 1.5 |
+| `3` | Priority Overnight | 1.2 |
+| `4` | Standard Overnight | 1.0 |
+| `5` | 2-day AM | 0.9 |
+| `6` | 2-day | 0.8 |
+| `7` | Express Saver | 0.6 |
+
+### 3.3 Service Surcharges
+
+| Service | Condition / Code | Fee ($) |
+|---|---|---|
+| Signature | `signatureOption = 0` (None) | $0.00 |
+| Signature | `signatureOption = 1` (Indirect) | $3.00 |
+| Signature | `signatureOption = 2` (Direct) | $10.00 |
+| Location Type | `deliveryLocationType = 0` (Business) | $0.00 |
+| Location Type | `deliveryLocationType = 1` (Residence) | $10.00 |
+| Saturday Delivery | `saturdayDelivery = 1` | $20.00 |
+| Hold at Location | `holdAtLocation = 1` | $15.00 |
+| Fragile Handling | `fragile = 1` | $25.00 |
+| Dangerous Goods | `dangerous = 1` | $50.00 |
+
+## 4. Calculation Procedure & Order of Operations
+
+1. **Base Cost Calculation**:
+   Look up the base rate per pound for the origin and destination zone pair.
+   $$\text{baseCost} = \text{baseRate} \times \text{weight}$$
+
+2. **Delivery Speed Adjustment**:
+   Multiply base cost by the service delivery multiplier:
+   $$\text{multipliedCost} = \text{baseCost} \times \text{deliveryMultiplier}$$
+
+3. **Additive Surcharges**:
+   Add all applicable service surcharges:
+   $$\text{totalCost} = \text{multipliedCost} + \text{signatureSurcharge} + \text{residentialSurcharge} + \text{saturdaySurcharge} + \text{holdSurcharge} + \text{fragileSurcharge} + \text{dangerousSurcharge}$$
+
+4. **Rounding Policy**:
+   The final total cost is rounded to exactly two decimal places using standard half-up rounding.
+
+
+---
+
+## 5. Clarifications (v1.1)
+
+- **Intermediate Precision and Final Rounding**: All intermediate calculation steps preserve full numerical precision without intermediate rounding. Only the final total cost is rounded to two decimal places using standard half-up rounding.
+  - *Worked Example*: Weight = `1.05`, Origin = `1`, Destination = `2` (base rate $2.50), Delivery Option = `3` (multiplier 1.2), all other options = `0`. Base cost is $2.50 \times 1.05 = 2.625$. Multiplied cost is $2.625 \times 1.2 = 3.150$. Final rounded total is `$3.15` (intermediate rounding of base cost to $2.63 would incorrectly yield $3.16).
+- **Validation Rule Priority and Multiple Violations**: If an input violates more than one domain or validation constraint, the request is rejected with `ERROR`. The evaluation order of validation checks does not affect the outcome.
+- **Out-of-Domain and Malformed Inputs**: Any input value outside the specified domains (such as negative or zero weight, origin/destination outside 1–4, delivery options outside 1–7, non-integer values where integers are expected, or missing values) results in an error rejection (`ERROR`).
+- **Rounding of Ties**: Ties at the third decimal are rounded away from zero, e.g. 12.345 -> 12.35 and -161.795 -> -161.80.
+
+Here are example test cases:
+weight,origin,destination,deliveryOption,signatureOption,deliveryLocationType,saturdayDelivery,holdAtLocation,fragile,dangerous,expected
+20.0,2,3,4,1,0,0,0,0,0,58.00
+15.0,1,2,2,0,1,0,0,0,0,66.25
+25.0,1,3,3,2,0,1,0,0,0,120.00
+
+Generate 20 test cases based on the specification above.
+Output the test cases strictly as CSV data.

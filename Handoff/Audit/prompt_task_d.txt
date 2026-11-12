@@ -1,0 +1,39 @@
+<USER_REQUEST>
+=== PREAMBLE (applies to everything below) ===
+LANGUAGE: Talk to me in the chat in VIETNAMESE. Everything you write to disk (code, comments, README, CSV headers, documents, logs) must be in ENGLISH.
+SAFETY: Work only inside D:\SWT301_TEST. Do not modify or delete existing files in Project1 or Project2 unless a task below explicitly allows adding a NEW file. Do not install anything globally and do not change system settings or PATH permanently. If mvn is not found, refresh PATH for the current terminal session only. Ask me before downloading anything.
+HONESTY: Never fabricate numbers or results. Never claim a step is done unless you ran it and saw the result. If something fails or is ambiguous, stop and tell me instead of silently choosing.
+END OF EACH TASK: list the files created or changed, the commands you ran, and the test results.
+=== END PREAMBLE ===
+
+CONTEXT: Project1 (Basic Package), Project2 (Basic Payroll), Project3 (Enhanced Package), Project4 (Enhanced Payroll) are finished. Now prepare the materials for a black-box benchmark. Test creators (a human for TFD, an external LLM, the PICT tool) must NEVER see any defect information.
+
+TASK A - Clean specifications in D:\SWT301_TEST\Spec\ :
+Create one spec file per application (4 files): inputs with types and valid domains, code tables, formulas, rounding rule (final amount rounded to 2 decimals), all Notes/validation rules, and the order of operations. Derive them from the correct behaviour (defect NONE) and the READMEs' functional/Assumption sections. They MUST NOT contain: defect lists, "D1".."D20", the word DEFECT, class or method names, or any hint about seeded faults. After writing, run a search (grep or Select-String) for "defect", "DEFECT", "D[0-9]" and report that nothing is found.
+Also create Spec\csv_format.md: ONE fixed CSV header per application (input variables in fixed order + a final column "expected" which holds the amount with 2 decimals, or the word ERROR when the input must be rejected). Create blank templates Spe
+<truncated 2284 bytes>
+ge|BasicPayroll|EnhancedPackage|EnhancedPayroll>\PICT_plain\suite.csv (and PICT_constrained). The "expected" column of PICT suites is left empty.
+
+TASK D - SuiteRunner:
+In each of Project1..Project4 ADD one new file SuiteRunner.java (do not edit existing files; record SHA-256 of the existing files before and after to prove nothing changed). Usage: java -cp target\classes ...SuiteRunner <suite.csv> <outDir>. For every test and every defect:
+ - run NONE and Dk; record output or ERROR;
+ - HIT_REF = output/error of Dk differs from NONE at 2 decimals (primary oracle);
+ - HIT_EXP = Dk differs from the creator's "expected" column (only when expected is not empty);
+ - BASELINE_OK = NONE equals creator's expected (only when expected is not empty).
+Write <outDir>\matrix_long.csv (suite, test_id, defect, HIT_REF, HIT_EXP, BASELINE_OK) and a summary printed to console: defects detected / total, number of invalid tests, number of tests that fail on the baseline. Test it with the existing sample CSV and with each PICT suite, and report the numbers.
+
+Also create Logs\generation_log.csv with the header: timestamp,app_level,method,condition,rep,model_name,model_version,tool,minutes,input_tokens,output_tokens,notes, and a folder tree Suites\<app>\TFD and Suites\<app>\LLM.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-11-02T15:48:59+07:00.
+
+The user's current state is as follows:
+Active Document: d:\SWT301_TEST\Project3\README.md (LANGUAGE_UNSPECIFIED)
+Cursor is on line: 1
+Other open documents:
+- d:\SWT301_TEST\Project4\src\test\java\com\payroll\enhanced\DefectExposureTest.java (LANGUAGE_UNSPECIFIED)
+- d:\SWT301_TEST\Project4\src\test\java\com\payroll\enhanced\PayrollCalculatorTest.java (LANGUAGE_UNSPECIFIED)
+- d:\SWT301_TEST\Project4\testcases\sample_payroll_tests.csv (LANGUAGE_UNSPECIFIED)
+- d:\SWT301_TEST\Project3\src\main\java\com\shipping\enhanced\DefectRunner.java (LANGUAGE_UNSPECIFIED)
+- d:\SWT301_TEST\Project3\testcases\sample_shipping_tests.csv (LANGUAGE_UNSPECIFIED)
+</ADDITIONAL_METADATA>

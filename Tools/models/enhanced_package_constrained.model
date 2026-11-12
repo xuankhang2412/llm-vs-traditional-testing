@@ -1,0 +1,31 @@
+weight: 1.0, 6.0, 17.5, 32.5, 45.0, 55.0
+origin: 1, 2, 3, 4
+destination: 1, 2, 3, 4
+deliveryOption: 1, 2, 3, 4, 5, 6, 7
+packaging: 1, 2, 3, 4, 5, 6, 7, 8
+signature: 0, 1, 2
+locationType: 0, 1
+saturday: 0, 1
+hold: 0, 1
+fragile: 0, 1
+dangerous: 0, 1
+
+# Packaging capacity limits
+IF [packaging] = 1 THEN [weight] = 1.0;
+IF [packaging] = 2 THEN [weight] IN {1.0, 6.0};
+IF [packaging] = 3 THEN [weight] IN {1.0, 6.0, 17.5};
+IF [packaging] = 4 THEN [weight] IN {1.0, 6.0, 17.5, 32.5};
+IF [packaging] = 5 THEN [weight] IN {1.0, 6.0};
+
+# Rule 4: Business location requires signature 1 or 2
+IF [locationType] = 0 THEN [signature] IN {1, 2};
+
+# Rule 5: Weight > 50 requires signature 1 or 2
+IF [weight] = 55.0 THEN [signature] IN {1, 2};
+
+# Rule 7: Fragile and dangerous cannot be combined
+NOT ([fragile] = 1 AND [dangerous] = 1);
+
+# Rule 8: Dangerous requires deliveryOption in {1,2,3,4}
+IF [dangerous] = 1 THEN [deliveryOption] IN {1, 2, 3, 4};
+
